@@ -6,6 +6,7 @@ import Rules
 from LiranAITest.AlphaBetaPruning import start_alpha_beta
 import copy
 from LiranAITest.ZorbistHashing import init_zobrist_table
+from AI.IterativeDeepening import iterative_deepening_search, depth_found
 # Variables to create the board initial state
 boardSize = 0
 # (y,x)
@@ -16,6 +17,7 @@ arrowsPosition = []
 aiTime = 0
 playerTurn = ["White", "Black"]
 players = [["", playerTurn[0]], ["", playerTurn[1]]]
+turn_count = 0
 
 
 def SetBoardSize():
@@ -222,21 +224,23 @@ def InitialBoardSetup():
 InitialBoardSetup()
 i = 0
 while True:
+    turn_count += 1
     print(playerTurn[i])
-    if IsGameEnded(playerTurn[i]):
-        print("{0} has won!!!!".format(playerTurn[(i + 1) % 2]))
-        break
     if players[i][0].upper() == "HUMAN":
         PlayerMove(playerTurn[i])
 
     elif players[i][0].upper() == "AI":
         startingTime = time.time()
         if players[i][1].upper() == "WHITE":
-            move = start_alpha_beta(copy.deepcopy(boardMatrix), 1, boardSize, copy.deepcopy(whiteQueensSetup),
-                                    copy.deepcopy(blackQueensSetup))
+            move = iterative_deepening_search(copy.deepcopy(boardMatrix), 2, boardSize, copy.deepcopy(whiteQueensSetup),
+                                              copy.deepcopy(blackQueensSetup), turn_count, aiTime/10)
+            #move = start_alpha_beta(copy.deepcopy(boardMatrix), 1, boardSize, copy.deepcopy(whiteQueensSetup),
+             #                       copy.deepcopy(blackQueensSetup), turn_count)
         else:
-            move = start_alpha_beta(copy.deepcopy(boardMatrix), 1, boardSize, copy.deepcopy(blackQueensSetup),
-                                    copy.deepcopy(whiteQueensSetup))
+            move = iterative_deepening_search(copy.deepcopy(boardMatrix), 1, boardSize, copy.deepcopy(blackQueensSetup),
+                                              copy.deepcopy(whiteQueensSetup), turn_count, aiTime/10)
+            #move = start_alpha_beta(copy.deepcopy(boardMatrix), 1, boardSize, copy.deepcopy(blackQueensSetup),
+             #                       copy.deepcopy(whiteQueensSetup), turn_count)
         current_queen_position, new_queen_position, arrow_position = move
         AIMove(current_queen_position, new_queen_position, arrow_position, players[i][1])
         move_string = SI.TranslateCordinates(current_queen_position, new_queen_position, arrow_position)
@@ -253,13 +257,12 @@ while True:
         # Number of access to Hash table
         ## UNCOMMENT THIS--- AIMove(currentPosition, newPosition, arrowPosition, playerTurn[i])
         ## UNCOMMENT THIS--- MoveString = SI.TranslateCordinates(currentPosition, newPosition, arrowPosition) ##
-        elapsedTime = (
-            time.time() - startingTime
-        )  # This should give me how much time has passed in seconds for the
+        elapsedTime = time.time() - startingTime
+        # This should give me how much time has passed in seconds for the
         # whole turn
         aiTime -= elapsedTime
         PrintBoard()
-        print(SI.MoveOutput(move_string, 1, elapsedTime))
+        print(SI.MoveOutput(move_string, depth_found, elapsedTime))
         ## UNCOMMENT THIS--- print(SI.MoveOutput(MoveString, evaluation, elapsedTime))
         # Here we need to print another technical data (What we got from our function)
         ## UNCOMMENT THIS--- SI.PrintExtraData(depth, PV, PVEvaluation, pruningData, hashAccessNumbers)
@@ -267,6 +270,9 @@ while True:
         if aiTime <= 0:
             print("AI time has ended, {0} win!!!".format(players[i][1]))
             break
+    if IsGameEnded(playerTurn[i]):
+        print("{0} has won!!!!".format(playerTurn[(i + 1) % 2]))
+        break
 
     i = (i + 1) % 2
 
