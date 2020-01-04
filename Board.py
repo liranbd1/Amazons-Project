@@ -232,7 +232,7 @@ while True:
     elif players[i][0].upper() == "AI":
         startingTime = time.time()
         if players[i][1].upper() == "WHITE":
-            move = iterative_deepening_search(copy.deepcopy(boardMatrix), 2, boardSize, copy.deepcopy(whiteQueensSetup),
+            move = iterative_deepening_search(copy.deepcopy(boardMatrix), 5, boardSize, copy.deepcopy(whiteQueensSetup),
                                               copy.deepcopy(blackQueensSetup), turn_count, aiTime/10)
             #move = start_alpha_beta(copy.deepcopy(boardMatrix), 1, boardSize, copy.deepcopy(whiteQueensSetup),
              #                       copy.deepcopy(blackQueensSetup), turn_count)

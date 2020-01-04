@@ -22,5 +22,6 @@ def iterative_deepening_search(starting_board_matrix, max_depth, size, player_qu
         search_time -= elapsed_time
         if search_time <= 0:
             break
+    print("Elapsed time: {0}".format(elapsed_time))
     return global_best_move
 

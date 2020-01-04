@@ -44,66 +44,74 @@ def find_legal_moves(queens, is_arrow, color, arrow_start_position=None):
             if IsMoveLegal([px, py], [px - step, py], board_size, board_state):
                 if not is_arrow:
                     board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, (px - step, py))
+                    find_legal_moves(queens, True, color, [px - step, py])
                     board_state[px][py] = color
                 else:
-                    move_list.append((current_queen, arrow_start_position, (px - step, py)))
+                    if [current_queen, arrow_start_position, [px - step, py]] not in move_list:
+                        move_list.append([current_queen, arrow_start_position, [px - step, py]])
             # Check move down
             if IsMoveLegal([px, py], [px + step, py], board_size, board_state):
                 if not is_arrow:
                     board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, (px + step, py))
+                    find_legal_moves(queens, True, color, [px + step, py])
                     board_state[px][py] = color
                 else:
-                    move_list.append((current_queen, arrow_start_position, (px + step, py)))
+                    if [current_queen, arrow_start_position, [px + step, py]] not in move_list:
+                        move_list.append([current_queen, arrow_start_position, [px + step, py]])
             # Check right move
             if IsMoveLegal([px, py], [px, py + step], board_size, board_state):
                 if not is_arrow:
                     board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, (px, py + step))
+                    find_legal_moves(queens, True, color, [px, py + step])
                     board_state[px][py] = color
                 else:
-                    move_list.append((current_queen, arrow_start_position, (px, py + step)))
+                    if [current_queen, arrow_start_position, [px, py + step]] not in move_list:
+                        move_list.append([current_queen, arrow_start_position, [px, py + step]])
             # Check left move
             if IsMoveLegal([px, py], [px, py - step], board_size, board_state):
                 if not is_arrow:
                     board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, (px, py - step))
+                    find_legal_moves(queens, True, color, [px, py - step])
                     board_state[px][py] = color
                 else:
-                    move_list.append((current_queen, arrow_start_position, (px, py - step)))
+                    if [current_queen, arrow_start_position, [px, py - step]] not in move_list:
+                        move_list.append([current_queen, arrow_start_position, [px, py - step]])
             # Check up-left diagonal
             if IsMoveLegal([px, py], [px - step, py - step], board_size, board_state):
                 if not is_arrow:
                     board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, (px - step, py - step))
+                    find_legal_moves(queens, True, color, [px - step, py - step])
                     board_state[px][py] = color
                 else:
-                    move_list.append((current_queen, arrow_start_position, (px - step, py - step)))
+                    if [current_queen, arrow_start_position, [px - step, py - step]] not in move_list:
+                        move_list.append([current_queen, arrow_start_position, [px - step, py - step]])
             # Check down-right diagonal
             if IsMoveLegal([px, py], [px + step, py + step], board_size, board_state):
                 if not is_arrow:
                     board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, (px + step, py + step))
+                    find_legal_moves(queens, True, color, [px + step, py + step])
                     board_state[px][py] = color
                 else:
-                    move_list.append((current_queen, arrow_start_position, (px + step, py + step)))
+                    if [current_queen, arrow_start_position, [px + step, py + step]] not in move_list:
+                        move_list.append([current_queen, arrow_start_position, [px + step, py + step]])
             # Check up-right diagonal
             if IsMoveLegal([px, py], [px - step, py + step], board_size, board_state):
                 if not is_arrow:
                     board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, (px - step, py + step))
+                    find_legal_moves(queens, True, color, [px - step, py + step])
                     board_state[px][py] = color
                 else:
-                    move_list.append((current_queen, arrow_start_position, (px - step, py + step)))
+                    if [current_queen, arrow_start_position, [px - step, py + step]] not in move_list:
+                        move_list.append([current_queen, arrow_start_position, [px - step, py + step]])
             # Check down-left diagonal
             if IsMoveLegal([px, py], [px + step, py - step], board_size, board_state):
                 if not is_arrow:
                     board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, (px + step, py - step))
+                    find_legal_moves(queens, True, color, [px + step, py - step])
                     board_state[px][py] = color
                 else:
-                    move_list.append((current_queen, arrow_start_position, (px + step, py - step)))
+                    if [current_queen, arrow_start_position, [px + step, py - step]] not in move_list:
+                        move_list.append([current_queen, arrow_start_position, [px + step, py - step]])
     return move_list
 
 
@@ -195,6 +203,7 @@ def alpha_beta(depth, alpha, beta):
     # Will need to add a stopping condition where we are having the queens isolated
     current_player = players[current_depth % 2]
     moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
+    print("Number of moves in list: {0}".format(len(moves)))
     move_list.clear()
     best_value_min = MIN
     best_value_max = MAX
