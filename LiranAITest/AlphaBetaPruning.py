@@ -134,11 +134,17 @@ def update_move_to_board(move, queens, color):
 
 def undo_move_to_board(move, player):
     global current_depth
+    pos_to_back, pos_to_del, arrow = move
 
-    new_queen, old_queen, arrow = move
-    update_move_to_board([new_queen, old_queen, arrow], player[0], player[3])
+    for queen in player[0]:
+        if pos_to_del == queen.GetPosition():
+            break
+
+    queen.SetNewPosition(pos_to_back)
+    board_state[pos_to_del[0]][pos_to_del[1]] = EMPTY_SPACE
+    board_state[pos_to_back[0]][pos_to_back[1]] = player[3]
     board_state[arrow[0]][arrow[1]] = EMPTY_SPACE
-    current_depth -= 2
+    current_depth -= 1
 
 
 # This way our hash table will hold the value of the state_board, his son which is the best move from it and the move
@@ -158,9 +164,7 @@ def add_to_zobrist_hash_table(key, value, move, depth, son_key, player_color):
         # if new we update the data
         if data != new_data:
             if data[0] < new_data[0]:
-                temp = [value, data[1], data[2], data[3], data[4], data[5]]
-                update_this = {key: temp}
-                hash_table.update(update_this)
+                hash_table.update({key: new_data})
 
 
 def temp_func(value, move):
@@ -203,7 +207,7 @@ def alpha_beta(depth, alpha, beta):
     # Will need to add a stopping condition where we are having the queens isolated
     current_player = players[current_depth % 2]
     moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
-    print("Number of moves in list: {0}".format(len(moves)))
+    # print("Number of moves in list: {0}".format(len(moves)))
     move_list.clear()
     best_value_min = MIN
     best_value_max = MAX
@@ -225,8 +229,8 @@ def alpha_beta(depth, alpha, beta):
             alpha = max(alpha, best_value_min)
             if alpha >= beta:
 
-                print("Moves done: {0}\n Moves Found {1}\n Moves pruned: {2}\n".format(move_count, len(moves),
-                                                                                       len(moves) - move_count))
+                # print("Moves done: {0}\n Moves Found {1}\n Moves pruned: {2}\n".format(move_count, len(moves),
+                                                                        #               len(moves) - move_count))
                 pruning_count += 1
                 break
         else:
@@ -236,8 +240,8 @@ def alpha_beta(depth, alpha, beta):
             beta = min(beta, best_value_max)
             if beta <= alpha:
 
-                print("Moves done: {0}\n Moves Found {1}\n Moves pruned: {2}\n".format(move_count, len(moves),
-                                                                                       len(moves) - move_count))
+                # print("Moves done: {0}\n Moves Found {1}\n Moves pruned: {2}\n".format(move_count, len(moves),
+                                                            #                           len(moves) - move_count))
                 pruning_count += 1
 
                 break
@@ -275,7 +279,7 @@ def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q,
     # Freeing memory from old moves in hash table
     clear_hash()
     val = alpha_beta(depth, MIN, MAX)
-    print("Number of pruning_count: {0}".format(pruning_count))
+    # print("Number of pruning_count: {0}".format(pruning_count))
     # Searching for the value in our hash table.
     for key in hash_table:
         data = hash_table[key]
@@ -289,6 +293,6 @@ def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q,
 
     return val, move
 
-# TODO The bug that happens is that we never make a cell for the starting board state, therefore he never get a son_key
-# TODO causing all the problem in our loop, in this loop we must have at least 2 consitions to be able to find the right
-# TODO state that we want, if our random range was bigger it was no problem maybe we can do it by telling who player
+# TODO the bug when we don't get the right position is happening due to us not setting them back in the right place
+#  after we moved them. Should check all places that the queen position is changed and make sure that they are setting
+#  them back to place.
