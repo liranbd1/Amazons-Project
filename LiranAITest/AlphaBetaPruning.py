@@ -1,8 +1,10 @@
 import random
+from collections import deque
 from Rules import IsMoveLegal
 from Constants import EMPTY_SPACE, WHITE_QUEEN, BLACK_QUEEN, ARROW_SPACE
 from copy import deepcopy
 from LiranAITest.ZorbistHashing import compute_hash, hash_table
+from AI.TerriMobEval import territory_mobility_evaluation
 
 MIN = -1000
 MAX = 1000
@@ -26,8 +28,9 @@ def clear_hash():
             hash_table.pop(key)
 
 
-def evaluate():
-    return random.randint(-1200, 1200)
+def evaluate(color):
+    # return territory_mobility_evaluation(board_state, board_size, color)
+    return random.randint(-100, 100)
 
 
 def find_legal_moves(queens, is_arrow, color, arrow_start_position=None):
@@ -201,51 +204,55 @@ def alpha_beta(depth, alpha, beta):
     global son_to_save
     global pruning_count
 
-    best_value = 0
+    if depth == 0:
+        son_to_save = None
+        return evaluate("White")
     move_count = 0
     # 1st stopping condition for the alpha_beta (Since we are not looking to the end for now this is efficient)
     # Will need to add a stopping condition where we are having the queens isolated
     current_player = players[current_depth % 2]
-    moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
-    # print("Number of moves in list: {0}".format(len(moves)))
-    move_list.clear()
-    best_value_min = MIN
-    best_value_max = MAX
-    if (depth == 0) or (len(moves) == 0):
-        son_to_save = None
-        return evaluate()
-    sort_moves(moves, current_player)
-    for move in moves:
-        move_count += 1
-        update_move_to_board(move, current_player[0], current_player[3])
-        value = -alpha_beta(depth - 1, -beta, -alpha)
-        key = compute_hash(board_state)
-        add_to_zobrist_hash_table(key, value, move, current_depth, son_to_save, current_player[2])
-        undo_move_to_board(move, current_player)
-        if current_player[1]:
-            if best_value_min < value:
-                son_to_save = key
-                best_value = best_value_min = value
-            alpha = max(alpha, best_value_min)
-            if alpha >= beta:
 
-                # print("Moves done: {0}\n Moves Found {1}\n Moves pruned: {2}\n".format(move_count, len(moves),
-                                                                        #               len(moves) - move_count))
-                pruning_count += 1
-                break
-        else:
-            if best_value_max > value:
+    if current_player[1]:
+        max_evaluation = MIN
+        moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
+        move_list.clear()
+        while len(moves) != 0:
+            move = moves.pop(0)
+            move_count += 1
+            update_move_to_board(move, current_player[0], current_player[3])
+            value = alpha_beta(depth - 1, alpha, beta)
+            key = compute_hash(board_state)
+            add_to_zobrist_hash_table(key, value, move, current_depth, son_to_save, current_player[2])
+            undo_move_to_board(move, current_player)
+            if max_evaluation < value:
+                max_evaluation = value
                 son_to_save = key
-                best_value = best_value_max = value
-            beta = min(beta, best_value_max)
+            alpha = max(alpha, max_evaluation)
             if beta <= alpha:
-
-                # print("Moves done: {0}\n Moves Found {1}\n Moves pruned: {2}\n".format(move_count, len(moves),
-                                                            #                           len(moves) - move_count))
-                pruning_count += 1
-
+                print("P")
                 break
-    return best_value
+        return max_evaluation
+
+    else:
+        min_evaluation = MAX
+        moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
+        move_list.clear()
+        while len(moves) != 0:
+            move = moves.pop(0)
+            move_count += 1
+            update_move_to_board(move, current_player[0], current_player[3])
+            value = alpha_beta(depth - 1, alpha, beta)
+            key = compute_hash(board_state)
+            add_to_zobrist_hash_table(key, value, move, current_depth, son_to_save, current_player[2])
+            undo_move_to_board(move, current_player)
+            if min_evaluation > value:
+                min_evaluation = value
+                son_to_save = key
+            beta = min(beta, min_evaluation)
+            if beta <= alpha:
+                print("P")
+                break
+        return min_evaluation
 
 
 def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q, turn_number):
