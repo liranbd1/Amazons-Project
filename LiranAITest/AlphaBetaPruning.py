@@ -29,8 +29,7 @@ def clear_hash():
 
 
 def evaluate(color):
-    # return territory_mobility_evaluation(board_state, board_size, color)
-    return random.randint(-100, 100)
+    return territory_mobility_evaluation(board_state, board_size, color)
 
 
 def find_legal_moves(queens, is_arrow, color, arrow_start_position=None):
@@ -190,7 +189,7 @@ def sort_moves(moves_to_sort, player):
         max_value = -100000
         for move in moves_to_sort:
             update_move_to_board(move, player[0], player[3])
-            value = sevaluate()
+            value = evaluate(player[2])
             if max_value < value:
                 max_value = value
                 max_move = move
@@ -216,6 +215,7 @@ def alpha_beta(depth, alpha, beta):
         max_evaluation = MIN
         moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
         move_list.clear()
+        sort_moves(moves, current_player)
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -237,6 +237,7 @@ def alpha_beta(depth, alpha, beta):
         min_evaluation = MAX
         moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
         move_list.clear()
+        sort_moves(moves, current_player)
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
