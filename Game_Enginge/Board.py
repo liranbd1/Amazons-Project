@@ -1,11 +1,10 @@
-from Constants import *
+from Game_Enginge.Constants import *
 import time
-from Queen import *
-import StringInput as SI
-import Rules
+from Game_Enginge.Queen import *
+from Game_Enginge import Rules, StringInput as SI
 import copy
-from LiranAITest.ZorbistHashing import init_zobrist_table
-from AI.IterativeDeepening import iterative_deepening_search, depth_found
+from AI.Enchantments.ZorbistHashing import init_zobrist_table, hash_table, compute_hash
+from AI.Search_tree.IterativeDeepening import iterative_deepening_search, depth_found
 # Variables to create the board initial state
 board_size = 0
 # (y,x)
@@ -44,11 +43,11 @@ def create_board_matrix():
 def setup_board():
     queen_position_setup()
     for wq in white_queens_setup:
-        position = wq.GetPosition()
+        position = wq.get_position()
         board_matrix[int(position[0])][int(position[1])] = WHITE_QUEEN
 
     for bq in black_queen_setup:
-        position = bq.GetPosition()
+        position = bq.get_position()
         board_matrix[int(position[0])][int(position[1])] = BLACK_QUEEN
 
 
@@ -95,9 +94,9 @@ def player_move(player):
         elif not queen_to_move.IsQueenFree(board_matrix, board_size):
             print("Queen is not free")
         # Queen move is legal
-        elif Rules.IsMoveLegal(current_position, new_position, board_size, board_matrix):
+        elif Rules.is_move_legal(current_position, new_position, board_size, board_matrix):
             board_matrix[current_position[0]][current_position[1]] = EMPTY_SPACE
-            if Rules.IsMoveLegal(new_position, arrow, board_size, board_matrix):
+            if Rules.is_move_legal(new_position, arrow, board_size, board_matrix):
                 board_matrix[new_position[0]][new_position[1]] = queen_to_draw
                 queen_to_move.SetNewPosition(new_position)
                 board_matrix[arrow[0]][arrow[1]] = ARROW_SPACE
@@ -114,13 +113,13 @@ def find_queen(current_position, player):
     px, py = current_position
     if player == "White":
         for queen in white_queens_setup:
-            qpx, qpy = queen.GetPosition()
+            qpx, qpy = queen.get_position()
             if qpx == px and qpy == py:
                 return queen
 
     elif player == "Black":
         for queen in black_queen_setup:
-            qpx, qpy = queen.GetPosition()
+            qpx, qpy = queen.get_position()
             if qpx == px and qpy == py:
                 return queen
 
@@ -165,7 +164,7 @@ def is_game_ended(player):
         queen_setup = black_queen_setup
 
     for queen in queen_setup:
-        if queen.IsQueenFree(board_matrix, board_size):
+        if queen.is_queen_free(board_matrix, board_size):
             return False
     return True
 
@@ -223,39 +222,29 @@ while True:
 
     elif players[i][0].upper() == "AI":
         startingTime = time.time()
-        if players[i][1].upper() == "WHITE":
-            move = iterative_deepening_search(copy.deepcopy(board_matrix), 2, board_size, copy.deepcopy(white_queens_setup),
-                                              copy.deepcopy(black_queen_setup), turn_count, ai_time / 10)
-            #move = start_alpha_beta(copy.deepcopy(boardMatrix), 1, boardSize, copy.deepcopy(whiteQueensSetup),
-             #                       copy.deepcopy(blackQueensSetup), turn_count)
+        state_key = compute_hash(board_matrix)
+        if state_key in hash_table:
+            state_data = hash_table[state_key]
+            max_depth = state_data[6]
         else:
-            move = iterative_deepening_search(copy.deepcopy(board_matrix), 1, board_size, copy.deepcopy(black_queen_setup),
+            max_depth = 2
+
+        if players[i][1].upper() == "WHITE":
+            move = iterative_deepening_search(copy.deepcopy(board_matrix), max_depth, board_size,
+                                              copy.deepcopy(white_queens_setup),
+                                              copy.deepcopy(black_queen_setup), turn_count, ai_time / 10)
+        else:
+            move = iterative_deepening_search(copy.deepcopy(board_matrix), max_depth, board_size,
+                                              copy.deepcopy(black_queen_setup),
                                               copy.deepcopy(white_queens_setup), turn_count, ai_time / 10)
-            #move = start_alpha_beta(copy.deepcopy(boardMatrix), 1, boardSize, copy.deepcopy(blackQueensSetup),
-             #                       copy.deepcopy(whiteQueensSetup), turn_count)
         current_queen_position, new_queen_position, arrow_position = move
         ai_move(current_queen_position, new_queen_position, arrow_position, players[i][1])
         move_string = SI.TranslateCordinates(current_queen_position, new_queen_position, arrow_position)
 
-        # should send the AI the boardMatrix and get in returning this data:
-        # Current position - finding the queen
-        # New position - where the queen should go
-        # Arrow position - where the arrow was sent to
-        # Evaluation of the move
-        # Depth of the MinMax tree we made
-        # PV (?)
-        # evaluation of PV(?)
-        # Data of Pruning or Extensions (Check what he means)
-        # Number of access to Hash table
-        ## UNCOMMENT THIS--- AIMove(currentPosition, newPosition, arrowPosition, playerTurn[i])
-        ## UNCOMMENT THIS--- MoveString = SI.TranslateCordinates(currentPosition, newPosition, arrowPosition) ##
         elapsedTime = time.time() - startingTime
-        # This should give me how much time has passed in seconds for the
-        # whole turn
         ai_time -= elapsedTime
         print_board()
         print(SI.MoveOutput(move_string, depth_found, elapsedTime))
-        ## UNCOMMENT THIS--- print(SI.MoveOutput(MoveString, evaluation, elapsedTime))
         # Here we need to print another technical data (What we got from our function)
         ## UNCOMMENT THIS--- SI.PrintExtraData(depth, PV, PVEvaluation, pruningData, hashAccessNumbers)
 

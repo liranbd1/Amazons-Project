@@ -1,5 +1,5 @@
 from random import randint
-from Constants import WHITE_QUEEN, BLACK_QUEEN, ARROW_SPACE, EMPTY_SPACE
+from Game_Enginge.Constants import WHITE_QUEEN, BLACK_QUEEN, ARROW_SPACE, EMPTY_SPACE
 zobrist_table = []
 board_size = 0
 
