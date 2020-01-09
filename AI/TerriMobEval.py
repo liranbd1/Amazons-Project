@@ -11,8 +11,8 @@ from copy import deepcopy
 
 state = []
 size = 0
-white_board = []
-black_board = []
+player_board = []
+enemy_board = []
 white_mobility = 0
 black_mobility = 0
 player_color = ""
@@ -21,8 +21,8 @@ player_color = ""
 def territory_mobility_evaluation(board_state, board_size, color):
     global state
     global size
-    global white_board
-    global black_board
+    global player_board
+    global enemy_board
     global player_color
 
     state = board_state
@@ -44,9 +44,9 @@ def player_evaluation():
     # now we will check in the minimum distances matrices which player got each square first
     for row in range(int(size)):
         for col in range(int(size)):
-            if black_board[row][col] < white_board[row][col]:
+            if enemy_board[row][col] < player_board[row][col]:
                 black_eval += 1
-            if white_board[row][col] < black_board[row][col]:
+            if player_board[row][col] < enemy_board[row][col]:
                 white_eval += 1
     if player_color == "WHITE":
         return (0.3 * white_mobility + 0.7 * white_eval) - (0.3 * black_mobility + 0.7 * black_eval)
@@ -78,18 +78,18 @@ def nearest_queen(row, col):
             if state[move[0]][move[1]] == BLACK_QUEEN:  # if we found a black queen in the square
                 if turn == 1:  # checking for mobility in 1 move
                     black_mobility += 1
-                if black_board[row][col] > turn:
-                    black_board[row][col] = turn  # TODO Daniel what this part does? should be = and not == ?
+                if enemy_board[row][col] > turn:
+                    enemy_board[row][col] = turn  # TODO Daniel what this part does? should be = and not == ?
             if state[move[0]][move[1]] == WHITE_QUEEN:  # if we found a white queen in the square
                 if turn == 1:  # checking for mobility in 1 move
                     white_mobility += 1
-                if white_board[row][col] > turn:
-                    white_board[row][col] = turn  # TODO Daniel what this part does? should be = and not == ?
-            if len(square_moves) == 1 and (white_board[row][col] != 0 or white_board[row][col] != 0):
+                if player_board[row][col] > turn:
+                    player_board[row][col] = turn  # TODO Daniel what this part does? should be = and not == ?
+            if len(square_moves) == 1 and (player_board[row][col] != 0 or player_board[row][col] != 0):
                 queen_found = True
                 square_moves.clear()
                 break
-            if white_board[row][col] != 0 and white_board[row][col] != 0:
+            if player_board[row][col] != 0 and player_board[row][col] != 0:
                 queen_found = True
                 square_moves.clear()
                 break

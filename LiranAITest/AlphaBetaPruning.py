@@ -1,10 +1,10 @@
 import random
-from collections import deque
+from LiranAITest.EvaluationTest import relative_territory_mobility, mobility_evaluation
 from Rules import IsMoveLegal
 from Constants import EMPTY_SPACE, WHITE_QUEEN, BLACK_QUEEN, ARROW_SPACE
 from copy import deepcopy
 from LiranAITest.ZorbistHashing import compute_hash, hash_table
-from AI.TerriMobEval import territory_mobility_evaluation
+import time
 
 MIN = -1000
 MAX = 1000
@@ -28,8 +28,12 @@ def clear_hash():
             hash_table.pop(key)
 
 
-def evaluate(color):
-    return territory_mobility_evaluation(board_state, board_size, color)
+def evaluate(player_queens, enemy_queens):
+   # start_time = time.time()
+    score = relative_territory_mobility(board_state, board_size,player_queens, enemy_queens)
+    # elapsed_time = time.time() - start_time
+   # print(elapsed_time)
+    return score
 
 
 def find_legal_moves(queens, is_arrow, color, arrow_start_position=None):
@@ -183,19 +187,18 @@ def sevaluate():
     return random.randint(1001, 1200)
 
 
-def sort_moves(moves_to_sort, player):
+def sort_moves(moves_to_sort, player, enemy):
     max_move = []
-    for i in range(6):
-        max_value = -100000
-        for move in moves_to_sort:
-            update_move_to_board(move, player[0], player[3])
-            value = evaluate(player[2])
-            if max_value < value:
-                max_value = value
-                max_move = move
-            undo_move_to_board(move, player)
-        moves_to_sort.remove(max_move)
-        moves_to_sort.insert(i, max_move)
+    moves_scores = []
+    for move in moves_to_sort:
+        update_move_to_board(move, player[0], player[3])
+        value = mobility_evaluation(board_state, board_size, player[0], enemy[0])
+        moves_scores.insert(value, move)
+        undo_move_to_board(move, player)
+    for i in range(1, 6):
+        move = moves_scores.pop(-i)
+        moves_to_sort.remove(move)
+        moves_to_sort.insert(i-1, move)
 
 
 def alpha_beta(depth, alpha, beta):
@@ -203,19 +206,23 @@ def alpha_beta(depth, alpha, beta):
     global son_to_save
     global pruning_count
 
+    current_player = players[current_depth % 2]
+
     if depth == 0:
         son_to_save = None
-        return evaluate("White")
+        player = players[(current_depth + 1) % 2]
+        return evaluate(player[0], current_player[0])
     move_count = 0
     # 1st stopping condition for the alpha_beta (Since we are not looking to the end for now this is efficient)
     # Will need to add a stopping condition where we are having the queens isolated
-    current_player = players[current_depth % 2]
 
     if current_player[1]:
         max_evaluation = MIN
         moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
         move_list.clear()
-        sort_moves(moves, current_player)
+        st = time.time()
+        sort_moves(moves, current_player, players[(current_depth + 1) % 2])
+        print(time.time() - st)
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -237,7 +244,7 @@ def alpha_beta(depth, alpha, beta):
         min_evaluation = MAX
         moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
         move_list.clear()
-        sort_moves(moves, current_player)
+        # sort_moves(moves, current_player)
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1

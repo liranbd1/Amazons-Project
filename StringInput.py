@@ -18,7 +18,10 @@ def TranslatingMove(moveInput):
 
 def TranslatePosition(position):
     px = letters_dictionary.get(position[0].upper())
-    py = int(position[1]) - 1
+    if len(position) == 3:
+        py = 9
+    else:
+        py = int(position[1]) - 1
     return [px, py]
 
 
