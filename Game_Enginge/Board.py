@@ -91,14 +91,14 @@ def player_move(player):
         if queen_to_move == "No legal queen":
             print("Please choose a queen")
         # Check if queen is free
-        elif not queen_to_move.IsQueenFree(board_matrix, board_size):
+        elif not queen_to_move.is_queen_free(board_matrix, board_size):
             print("Queen is not free")
         # Queen move is legal
         elif Rules.is_move_legal(current_position, new_position, board_size, board_matrix):
             board_matrix[current_position[0]][current_position[1]] = EMPTY_SPACE
             if Rules.is_move_legal(new_position, arrow, board_size, board_matrix):
                 board_matrix[new_position[0]][new_position[1]] = queen_to_draw
-                queen_to_move.SetNewPosition(new_position)
+                queen_to_move.set_new_position(new_position)
                 board_matrix[arrow[0]][arrow[1]] = ARROW_SPACE
                 arrowsPosition.append(arrow)
                 break
@@ -152,7 +152,7 @@ def ai_move(current_position, new_position, arrow_pos, color):
     queen_to_move = find_queen(current_position, color)
     board_matrix[current_position[0]][current_position[1]] = EMPTY_SPACE
     board_matrix[new_position[0]][new_position[1]] = queen
-    queen_to_move.SetNewPosition(new_position)
+    queen_to_move.set_new_position(new_position)
     board_matrix[arrow_pos[0]][arrow_pos[1]] = ARROW_SPACE
     arrowsPosition.append(arrow_pos)
 
