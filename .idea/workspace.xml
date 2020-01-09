@@ -2,9 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ebc68c8-3d45-4584-9aaa-0ea351d7a1de" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/AI/Enchantments/Killer_Moves.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AI/Heuristics/TerriMobEval.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game_Enginge/Rules.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AI/TerriMobEval.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/TerriMobEval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LiranAITest/AlphaBetaPruning.py" beforeDir="false" afterPath="$PROJECT_DIR$/LiranAITest/AlphaBetaPruning.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/IterativeDeepening.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/Search_tree/IterativeDeepening.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/TerriMobEval.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/minMaxTree.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/treeNode.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_Enginge/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_Enginge/Constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LiranAITest/AlphaBetaPruning.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/Search_tree/AlphaBetaPruning.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LiranAITest/EvaluationTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/EvaluationTest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LiranAITest/MinMaxTree.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LiranAITest/StateNode.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LiranAITest/ZorbistHashing.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/Enchantments/ZorbistHashing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Queen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_Enginge/Queen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rules.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/StringInput.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_Enginge/StringInput.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestTree.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,43 +30,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Constants.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/LiranAITest/AlphaBetaPruning.py">
+        <entry file="file://$PROJECT_DIR$/AI/Search_tree/AlphaBetaPruning.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4063">
-              <caret line="248" selection-start-line="248" selection-end-line="248" />
+            <state relative-caret-position="-611">
+              <caret line="274" selection-start-line="274" selection-end-line="274" />
               <folding>
-                <element signature="e#0#13#0" expanded="true" />
+                <element signature="e#0#4#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AI/IterativeDeepening.py">
+        <entry file="file://$PROJECT_DIR$/AI/Enchantments/Killer_Moves.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="25" selection-start-line="25" selection-end-line="25" />
-              <folding>
-                <element signature="e#0#57#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="34">
+              <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/LiranAITest/ZorbistHashing.py">
+        <entry file="file://$PROJECT_DIR$/AI/Enchantments/ZorbistHashing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
+            <state relative-caret-position="68">
               <caret line="4" selection-start-line="4" selection-end-line="4" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
@@ -60,19 +64,43 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Rules.py">
+        <entry file="file://$PROJECT_DIR$/AI/Search_tree/IterativeDeepening.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1105">
-              <caret line="65" selection-start-line="65" selection-end-line="65" />
+            <state relative-caret-position="511">
+              <caret line="38" selection-start-line="38" selection-end-line="38" />
+              <folding>
+                <element signature="e#0#60#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Board.py">
+        <entry file="file://$PROJECT_DIR$/Game_Enginge/Rules.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3315">
-              <caret line="234" column="75" selection-start-line="234" selection-start-column="75" selection-end-line="234" selection-end-column="75" />
+            <state relative-caret-position="748">
+              <caret line="44" selection-start-line="44" selection-end-line="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AI/Heuristics/TerriMobEval.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1972">
+              <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
+              <folding>
+                <element signature="e#315#374#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Game_Enginge/Board.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="232" selection-start-line="232" selection-end-line="232" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -81,22 +109,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AI/TerriMobEval.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1207">
-              <caret line="74" column="37" selection-start-line="74" selection-start-column="37" selection-end-line="74" selection-end-column="37" />
-              <folding>
-                <element signature="e#314#373#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/LiranAITest/StateNode.py">
+        <entry file="file://$PROJECT_DIR$/Game_Enginge/StringInput.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="340">
-              <caret line="20" selection-start-line="20" selection-end-line="20" />
+              <caret line="20" column="4" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -120,6 +136,7 @@
       <find>FindQueen</find>
       <find>find_legal_moves</find>
       <find>Find</find>
+      <find>deep</find>
       <find>print</find>
     </findStrings>
   </component>
@@ -129,26 +146,34 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Queen.py" />
         <option value="$PROJECT_DIR$/BoardSetup.py" />
         <option value="$PROJECT_DIR$/AI/treeNode.py" />
         <option value="$PROJECT_DIR$/LiranAITest/StateNode.py" />
         <option value="$PROJECT_DIR$/TestTree.py" />
-        <option value="$PROJECT_DIR$/StringInput.py" />
         <option value="$PROJECT_DIR$/LiranAITest/MinMaxTree.py" />
         <option value="$PROJECT_DIR$/AlphaBetaPruning.py" />
         <option value="$PROJECT_DIR$/CurrentBoardData.py" />
-        <option value="$PROJECT_DIR$/Rules.py" />
         <option value="$PROJECT_DIR$/Constants.py" />
         <option value="$PROJECT_DIR$/LiranAITest/ZorbistHashing.py" />
         <option value="$PROJECT_DIR$/AI/IterativeDeepening.py" />
-        <option value="$PROJECT_DIR$/AI/TerriMobEval.py" />
+        <option value="$PROJECT_DIR$/StringInput.py" />
+        <option value="$PROJECT_DIR$/LiranAITest/EvaluationTest.py" />
         <option value="$PROJECT_DIR$/LiranAITest/AlphaBetaPruning.py" />
+        <option value="$PROJECT_DIR$/AI/TerriMobEval.py" />
+        <option value="$PROJECT_DIR$/Queen.py" />
+        <option value="$PROJECT_DIR$/Rules.py" />
         <option value="$PROJECT_DIR$/Board.py" />
+        <option value="$PROJECT_DIR$/AI/AlphaBetaPruning.py" />
+        <option value="$PROJECT_DIR$/AI/Heuristics/TerriMobEval.py" />
+        <option value="$PROJECT_DIR$/AI/Search_tree/temp.py" />
+        <option value="$PROJECT_DIR$/AI/Enchantments/Killer_Moves.py" />
+        <option value="$PROJECT_DIR$/AI/Search_tree/IterativeDeepening.py" />
+        <option value="$PROJECT_DIR$/Game_Enginge/Board.py" />
+        <option value="$PROJECT_DIR$/AI/Search_tree/AlphaBetaPruning.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="250" />
     <option name="y" value="-21" />
     <option name="width" value="1400" />
@@ -160,7 +185,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -176,12 +200,26 @@
             <path>
               <item name="PythonTests" type="b2602c69:ProjectViewProjectNode" />
               <item name="PythonTests" type="462c0819:PsiDirectoryNode" />
-              <item name="LiranAITest" type="462c0819:PsiDirectoryNode" />
+              <item name="AI" type="462c0819:PsiDirectoryNode" />
+              <item name="Enchantments" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PythonTests" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PythonTests" type="462c0819:PsiDirectoryNode" />
+              <item name="AI" type="462c0819:PsiDirectoryNode" />
+              <item name="Heuristics" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PythonTests" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PythonTests" type="462c0819:PsiDirectoryNode" />
+              <item name="AI" type="462c0819:PsiDirectoryNode" />
+              <item name="Search_tree" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -191,8 +229,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\liranb\Desktop\PythonTests\LiranAITest" />
-      <recent name="C:\Users\liranb\Desktop\PythonTests\AI" />
+      <recent name="C:\Users\liranb\Desktop\PythonTests\AI\Enchantments" />
+      <recent name="C:\Users\liranb\Desktop\PythonTests\AI\Search_tree" />
+      <recent name="C:\Users\liranb\Desktop\PythonTests\AI\Heuristics" />
+      <recent name="C:\Users\liranb\Desktop\PythonTests\Game_Enginge" />
+      <recent name="C:\Users\liranb\Desktop\PythonTests" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -220,7 +261,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Board.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\liranb\Desktop\PythonTests\Game_Enginge\Board.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -283,7 +324,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Queen.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\liranb\Desktop\PythonTests\Game_Enginge\Queen.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -349,19 +390,19 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49016643" weight="0.17913593" />
-      <window_info id="Structure" order="1" sideWeight="0.5098336" side_tool="true" weight="0.17913593" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4864572" visible="true" weight="0.17913593" />
+      <window_info id="Structure" order="1" sideWeight="0.5135428" side_tool="true" weight="0.17913593" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.31527627" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.49789253" visible="true" weight="0.283857" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.49736565" visible="true" weight="0.283857" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32936078" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49894625" weight="0.4496208" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5021075" side_tool="true" weight="0.35536295" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50263435" side_tool="true" weight="0.283857" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49789253" weight="0.32719395" />
       <window_info anchor="bottom" id="Messages" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -369,19 +410,19 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49493244" visible="true" weight="0.17913593" />
-      <window_info id="Structure" order="1" sideWeight="0.5050676" side_tool="true" weight="0.24973656" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4864572" visible="true" weight="0.17913593" />
+      <window_info id="Structure" order="1" sideWeight="0.5135428" side_tool="true" visible="true" weight="0.17913593" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.31527627" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.49789253" visible="true" weight="0.29035753" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49736565" weight="0.283857" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32936078" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49894625" weight="0.4496208" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5021075" side_tool="true" weight="0.35536295" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50263435" side_tool="true" weight="0.283857" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49789253" weight="0.32719395" />
       <window_info anchor="bottom" id="Messages" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -393,29 +434,34 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AI/TerriMobEval.py</url>
-          <line>72</line>
-          <option name="timeStamp" value="5" />
+          <url>file://$PROJECT_DIR$/Game_Enginge/Board.py</url>
+          <line>236</line>
+          <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AI/TerriMobEval.py</url>
-          <line>97</line>
-          <option name="timeStamp" value="7" />
+          <url>file://$PROJECT_DIR$/Game_Enginge/Board.py</url>
+          <line>232</line>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AI/TerriMobEval.py</url>
-          <line>76</line>
-          <option name="timeStamp" value="9" />
+          <url>file://$PROJECT_DIR$/Game_Enginge/Board.py</url>
+          <line>239</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AI/TerriMobEval.py</url>
-          <line>70</line>
-          <option name="timeStamp" value="10" />
+          <url>file://$PROJECT_DIR$/AI/Search_tree/IterativeDeepening.py</url>
+          <line>38</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AI/TerriMobEval.py</url>
-          <line>98</line>
-          <option name="timeStamp" value="12" />
+          <url>file://$PROJECT_DIR$/AI/Search_tree/AlphaBetaPruning.py</url>
+          <line>290</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/AI/Search_tree/AlphaBetaPruning.py</url>
+          <line>259</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -477,13 +523,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/StringInput.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="27" column="75" selection-start-line="27" selection-start-column="75" selection-end-line="27" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/treelib/tree.py" />
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/treelib/node.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38-32/Lib/uuid.py">
@@ -501,16 +540,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LiranAITest/MinMaxTree.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1836">
-          <caret line="112" selection-start-line="112" selection-end-line="112" />
-          <folding>
-            <element signature="e#0#72#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38-32/Lib/random.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
@@ -521,68 +550,10 @@
     <entry file="file://$PROJECT_DIR$/AI/minMaxTree.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Queen.py">
+    <entry file="file://$PROJECT_DIR$/LiranAITest/MinMaxTree.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38-32/Lib/copy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4233">
-          <caret line="251" selection-start-line="251" selection-end-line="251" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38-32/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5440">
-          <caret line="321" selection-start-line="321" selection-end-line="321" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Constants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AI/IterativeDeepening.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LiranAITest/ZorbistHashing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Rules.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1105">
-          <caret line="65" selection-start-line="65" selection-end-line="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AI/TerriMobEval.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1207">
-          <caret line="74" column="37" selection-start-line="74" selection-start-column="37" selection-end-line="74" selection-end-column="37" />
-          <folding>
-            <element signature="e#314#373#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="34">
+          <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -593,22 +564,121 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Board.py">
+    <entry file="file://$PROJECT_DIR$/AI/EvaluationTest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3315">
-          <caret line="234" column="75" selection-start-line="234" selection-start-column="75" selection-end-line="234" selection-end-column="75" />
+        <state relative-caret-position="235">
+          <caret line="81" selection-start-line="81" selection-end-line="81" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Game_Enginge/Constants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Game_Enginge/Queen.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2244">
+          <caret line="132" column="23" selection-start-line="132" selection-start-column="23" selection-end-line="132" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Game_Enginge/StringInput.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="4" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AI/Search_tree/temp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="296" column="21" lean-forward="true" selection-start-line="296" selection-start-column="21" selection-end-line="296" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AI/Enchantments/ZorbistHashing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AI/Enchantments/Killer_Moves.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AI/Heuristics/TerriMobEval.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1972">
+          <caret line="116" column="33" selection-start-line="116" selection-start-column="33" selection-end-line="116" selection-end-column="33" />
+          <folding>
+            <element signature="e#315#374#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38-32/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="320" selection-start-line="320" selection-end-line="320" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Game_Enginge/Board.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="232" selection-start-line="232" selection-end-line="232" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LiranAITest/AlphaBetaPruning.py">
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38-32/Lib/copy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4063">
-          <caret line="248" selection-start-line="248" selection-end-line="248" />
+        <state relative-caret-position="75">
+          <caret line="168" selection-start-line="168" selection-end-line="168" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Game_Enginge/Rules.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="748">
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AI/Search_tree/IterativeDeepening.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="511">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#0#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AI/Search_tree/AlphaBetaPruning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-611">
+          <caret line="274" selection-start-line="274" selection-end-line="274" />
+          <folding>
+            <element signature="e#0#4#0" expanded="true" />
           </folding>
         </state>
       </provider>
