@@ -186,7 +186,6 @@ def soft_evaluate():   # TODO first we will check if we calc the move by the ter
 def sort_moves(moves_to_sort, player):
     moves_scores = {}
     iteration = 1
-    print(moves_to_sort)
     for move in moves_to_sort:
         update_move_to_board(move, player[0], player[3])
         key = compute_hash(board_state)
@@ -235,7 +234,7 @@ def alpha_beta(depth, alpha, beta):
         max_evaluation = MIN
         moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
         move_list.clear()
-        sort_moves(moves, current_player)
+        moves = sort_moves(moves, current_player)
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -249,22 +248,23 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             alpha = max(alpha, max_evaluation)
             if beta <= alpha:
-                if move not in killer_moves[current_depth-1]:
-                    if len(killer_moves[current_depth-1]) == 2:
-                        killer_moves[current_depth - 1] = move + [killer_moves[current_depth-1][0]]
-                    elif len(killer_moves[current_depth - 1]) == 1:
-                        killer_moves[current_depth - 1] = move + [
-                            killer_moves[current_depth - 1]]  # killer Move produced a cut-off
-                    else:
-                        killer_moves[current_depth - 1] = move
-                break
+                if current_depth - 1 in killer_moves:
+                    if move not in killer_moves[current_depth-1]:
+                        if len(killer_moves[current_depth-1]) == 2:
+                            killer_moves[current_depth - 1] = move + [killer_moves[current_depth-1][0]]
+                        elif len(killer_moves[current_depth - 1]) == 1:
+                            killer_moves[current_depth - 1] = move + [
+                                killer_moves[current_depth - 1]]  # killer Move produced a cut-off
+                        else:
+                            killer_moves[current_depth - 1] = move
+                    break
         return max_evaluation
 
     else:
         min_evaluation = MAX
         moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
         move_list.clear()
-        sort_moves(moves, current_player)
+        moves = sort_moves(moves, current_player)
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -272,22 +272,23 @@ def alpha_beta(depth, alpha, beta):
             value = alpha_beta(depth - 1, alpha, beta)
             key = compute_hash(board_state)
             add_to_zobrist_hash_table(key, value, move, current_depth, son_to_save, current_player[2], max_depth_found)
-                undo_move_to_board(move, current_player)
+            undo_move_to_board(move, current_player)
             if min_evaluation > value:
                 min_evaluation = value
                 son_to_save = key
             beta = min(beta, min_evaluation)
             if beta <= alpha:
-                if move not in killer_moves[current_depth - 1]:  # TODO adding the killer move
-                    if len(killer_moves[current_depth - 1]) == 2:
-                        killer_moves[current_depth - 1] = move + [killer_moves[current_depth - 1][0]]
-                        print(killer_moves[current_depth - 1])
-                    elif len(killer_moves[current_depth - 1]) == 1:
-                        killer_moves[current_depth - 1] = move + [
-                            killer_moves[current_depth - 1]]  # killer Move produced a cut-off
-                    else:
-                        killer_moves[current_depth - 1] = move
-               # print("P")
+                if current_depth - 1 in killer_moves:
+                    if move not in killer_moves[current_depth - 1]:  # TODO adding the killer move
+                        if len(killer_moves[current_depth - 1]) == 2:
+                            killer_moves[current_depth - 1] = move + [killer_moves[current_depth - 1][0]]
+                            print(killer_moves[current_depth - 1])
+                        elif len(killer_moves[current_depth - 1]) == 1:
+                            killer_moves[current_depth - 1] = move + [
+                                killer_moves[current_depth - 1]]  # killer Move produced a cut-off
+                        else:
+                            killer_moves[current_depth - 1] = move
+                   # print("P")
                 break
         return min_evaluation
 
