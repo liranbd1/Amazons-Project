@@ -37,8 +37,8 @@ def relative_territory_mobility(board_state, board_size, player_queens, enemy_qu
     for queen in enemy_queens:
         enemy_queens_pos.append(queen.GetPosition())
 
-    player_mobility_score = territory(player_queens_pos, True)
-    enemy_mobility_score = territory(enemy_queens_pos, False)
+    territory(player_queens_pos, True)
+    territory(enemy_queens_pos, False)
 
     for i in range(size):
         for j in range(size):
@@ -46,8 +46,9 @@ def relative_territory_mobility(board_state, board_size, player_queens, enemy_qu
                 enemy_territory_score += 1
             elif (player_board[i][j] - enemy_board[i][j]) < 0:
                 player_territory_score += 1
-
-    return 4 * (player_territory_score - enemy_territory_score) + (player_mobility_score - enemy_mobility_score)
+    mobility_score = mobility_evaluation(state, size, player_queens, enemy_queens)
+    unchecked_squares.clear()
+    return 4 * (player_territory_score - enemy_territory_score) + mobility_score
 
 
 def territory(list_to_check, is_player):
@@ -60,7 +61,6 @@ def territory(list_to_check, is_player):
     while len(unchecked_squares_temp) != 0:
         for unchecked_square in unchecked_squares_temp:
             for space in space_to_compare_to:
-
                 if IsMoveLegal(space, unchecked_square, size, state):
                     if state[space[0]][space[1]] == EMPTY_SPACE:
                         if is_player:
@@ -72,13 +72,13 @@ def territory(list_to_check, is_player):
                             player_board[unchecked_square[0]][unchecked_square[1]] = 1
                         else:
                             enemy_board[unchecked_square[0]][unchecked_square[1]] = 1
-                        mobility_counter += 1
+                        # mobility_counter += 1
 
                     temp_list.append(unchecked_square)
-                    unchecked_squares_temp.remove(unchecked_square)
                     break
 
         space_to_compare_to = deepcopy(temp_list)
+        unchecked_squares_temp = [x for x in unchecked_squares_temp if x not in temp_list]
         temp_list.clear()
         if len(space_to_compare_to) == 0:
             # unreachable_squares.append(deepcopy(unchecked_squares))
@@ -99,10 +99,10 @@ def find_empty_spaces(board_state, board_size):
 
 def mobility_evaluation(board_state, board_size, player_queens, enemy_queens):
 
-    unchecked_squares = find_empty_spaces(board_state, board_size)
+    unchecked_squares_list = find_empty_spaces(board_state, board_size)
     p_score = 0
     e_score = 0
-    for square in unchecked_squares:
+    for square in unchecked_squares_list:
         for p_queen in player_queens:
             if IsMoveLegal(p_queen.GetPosition(), square,  board_size, board_state):
                 p_score += 1

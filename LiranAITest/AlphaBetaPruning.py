@@ -220,9 +220,9 @@ def alpha_beta(depth, alpha, beta):
         max_evaluation = MIN
         moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
         move_list.clear()
-        st = time.time()
+       # st = time.time()
         sort_moves(moves, current_player, players[(current_depth + 1) % 2])
-        print(time.time() - st)
+        # print(time.time() - st)
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -236,7 +236,7 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             alpha = max(alpha, max_evaluation)
             if beta <= alpha:
-                print("P")
+               # print("P")
                 break
         return max_evaluation
 
@@ -244,7 +244,7 @@ def alpha_beta(depth, alpha, beta):
         min_evaluation = MAX
         moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
         move_list.clear()
-        # sort_moves(moves, current_player)
+        sort_moves(moves, current_player, players[(current_depth + 1) % 2])
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -258,7 +258,7 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             beta = min(beta, min_evaluation)
             if beta <= alpha:
-                print("P")
+               # print("P")
                 break
         return min_evaluation
 
