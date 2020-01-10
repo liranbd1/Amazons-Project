@@ -10,7 +10,7 @@ import random
 MIN = -1000
 MAX = 1000
 board_state = []
-board_size: int = 0
+board_size = 0
 players = []
 current_depth = 0
 # move_list = []
