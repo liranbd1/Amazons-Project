@@ -13,22 +13,15 @@ board_state = []
 board_size = 0
 players = []
 current_depth = 0
-# move_list = []
 son_to_save = None
 turn_count = 0
 pruning_count = 0
 max_depth_found = 0
 
-
 # What our Hash table need to hold
 # value, Move, How deep we looked, father/son, current turn(How much deep we looked from the start of the game), player
 
 
-def clear_hash():
-    for key in list(hash_table):
-        data = hash_table[key]
-        if data[3] < turn_count:
-            hash_table.pop(key)
 
 
 def evaluate(color):
@@ -237,6 +230,7 @@ def update_move_to_board(move, queens, color):
 
 def undo_move_to_board(move, player):
     global current_depth
+
     pos_to_back, pos_to_del, arrow = move
 
     for queen in player[0]:
@@ -246,7 +240,8 @@ def undo_move_to_board(move, player):
     queen.set_new_position(pos_to_back)
     board_state[pos_to_del[0]][pos_to_del[1]] = EMPTY_SPACE
     board_state[pos_to_back[0]][pos_to_back[1]] = player[3]
-    board_state[arrow[0]][arrow[1]] = EMPTY_SPACE
+    if pos_to_back != arrow:
+        board_state[arrow[0]][arrow[1]] = EMPTY_SPACE
     current_depth -= 1
 
 
@@ -328,6 +323,7 @@ def alpha_beta(depth, alpha, beta):
     if current_player[1]:
         max_evaluation = MIN
         moves = move_generator(current_player[0])
+        moves = sort_moves(moves, current_player)
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -350,13 +346,13 @@ def alpha_beta(depth, alpha, beta):
                 #          killer_moves[current_depth - 1]]  # killer Move produced a cut-off
                 # else:
                 #    killer_moves[current_depth - 1] = move
-                print("Max-P")
                 break
         return max_evaluation
 
     else:
         min_evaluation = MAX
         moves = move_generator(current_player[0])
+        moves = sort_moves(moves, current_player)
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -381,7 +377,6 @@ def alpha_beta(depth, alpha, beta):
                 # else:
                 #    killer_moves[current_depth - 1] = move
                 # print("P")
-                print("Min-P")
                 break
         return min_evaluation
 
@@ -417,7 +412,6 @@ def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q,
     # Reset our current depth to 0
     current_depth = 0
     # Freeing memory from old moves in hash table
-    clear_hash()
     val = alpha_beta(depth, alpha, beta)
     # print("Number of pruning_count: {0}".format(pruning_count))
     # Searching for the value in our hash table.
@@ -428,7 +422,8 @@ def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q,
             move = data[1]
             # print(key)
             break
-    if move == 0:
-        raise Exception("Didn't find a viable move")
+    if move == 0 or len(move) != 3:
+        return False
+        # raise Exception("Didn't find a viable move")
 
     return val, move
