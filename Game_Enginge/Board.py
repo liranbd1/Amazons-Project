@@ -3,7 +3,7 @@ import time
 from Game_Enginge.Queen import *
 from Game_Enginge import Rules, StringInput as SI
 import copy
-from AI.Enchantments.ZorbistHashing import init_zobrist_table, hash_table, compute_hash
+from AI.Enchantments.ZorbistHashing import init_zobrist_table, hash_table, compute_hash,clear_hash
 from AI.Search_tree.IterativeDeepening import iterative_deepening_search, depth_found
 # Variables to create the board initial state
 board_size = 0
@@ -11,7 +11,6 @@ board_size = 0
 board_matrix = []
 white_queens_setup = []
 black_queen_setup = []
-arrowsPosition = []
 ai_time = 0
 player_turn = ["White", "Black"]
 players = [["", player_turn[0]], ["", player_turn[1]]]
@@ -78,7 +77,7 @@ def queen_position_setup():
 
 
 def player_move(player):
-    global arrowsPosition
+    #global arrowsPosition
     if player == "White":
         queen_to_draw = WHITE_QUEEN
     else:
@@ -100,7 +99,7 @@ def player_move(player):
                 board_matrix[new_position[0]][new_position[1]] = queen_to_draw
                 queen_to_move.set_new_position(new_position)
                 board_matrix[arrow[0]][arrow[1]] = ARROW_SPACE
-                arrowsPosition.append(arrow)
+                #arrowsPosition.append(arrow)
                 break
             else:
                 board_matrix[current_position[0]][current_position[1]] = queen_to_draw
@@ -154,7 +153,7 @@ def ai_move(current_position, new_position, arrow_pos, color):
     board_matrix[new_position[0]][new_position[1]] = queen
     queen_to_move.set_new_position(new_position)
     board_matrix[arrow_pos[0]][arrow_pos[1]] = ARROW_SPACE
-    arrowsPosition.append(arrow_pos)
+    # arrowsPosition.append(arrow_pos)
 
 
 def is_game_ended(player):
@@ -201,6 +200,10 @@ def who_starts():
         else:
             print("Please enter a valid input")
 
+def are_we_in_the_endgame_now():
+    # we need to get to matrix of relative territory for each color
+    pass
+
 
 def initialize_board():
     set_board_size()
@@ -222,21 +225,25 @@ while True:
 
     elif players[i][0].upper() == "AI":
         startingTime = time.time()
+        clear_hash(turn_count)
         state_key = compute_hash(board_matrix)
         if state_key in hash_table:
             state_data = hash_table[state_key]
-            max_depth = state_data[6]
+            if state_data[6] < 2:
+                max_depth = 2
+            else:
+                max_depth = state_data[6]
         else:
             max_depth = 2
-
+        print(max_depth)
         if players[i][1].upper() == "WHITE":
-            move = iterative_deepening_search(copy.deepcopy(board_matrix), 2, board_size,
-                                              copy.deepcopy(white_queens_setup),
-                                              copy.deepcopy(black_queen_setup), turn_count, ai_time / 10)
+            move = iterative_deepening_search(board_matrix, 4, board_size,
+                                              white_queens_setup,
+                                              black_queen_setup, turn_count, ai_time / 10)
         else:
-            move = iterative_deepening_search(copy.deepcopy(board_matrix), max_depth, board_size,
-                                              copy.deepcopy(black_queen_setup),
-                                              copy.deepcopy(white_queens_setup), turn_count, ai_time / 10)
+            move = iterative_deepening_search(board_matrix, 4, board_size,
+                                              black_queen_setup,
+                                              white_queens_setup, turn_count, ai_time / 10)
         current_queen_position, new_queen_position, arrow_position = move
         ai_move(current_queen_position, new_queen_position, arrow_position, players[i][1])
         move_string = SI.translate_cordinate(current_queen_position, new_queen_position, arrow_position)

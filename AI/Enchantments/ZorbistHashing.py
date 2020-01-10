@@ -6,6 +6,13 @@ board_size = 0
 hash_table = {}
 
 
+def clear_hash(turn_count):
+    for key in list(hash_table):
+        data = hash_table[key]
+        if data[3] < turn_count:
+            hash_table.pop(key)
+
+
 def indexing(piece):
     if piece == WHITE_QUEEN:
         return 0
