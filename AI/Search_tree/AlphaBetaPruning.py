@@ -19,6 +19,7 @@ turn_count = 0
 pruning_count = 0
 max_depth_found = 0
 
+
 # What our Hash table need to hold
 # value, Move, How deep we looked, father/son, current turn(How much deep we looked from the start of the game), player
 
@@ -31,7 +32,7 @@ def clear_hash():
 
 
 def evaluate(color):
-    evaluation = TerriMobEval(deepcopy(board_state), board_size, color)
+    evaluation = TerriMobEval(board_state, board_size, color)
     territory_score, mobility_score = evaluation.playerEval()
     score = 0.8 * territory_score + 0.2 * mobility_score
     return score
@@ -40,6 +41,10 @@ def evaluate(color):
 def move_generator(player_queens):
     move_list = []
     size = int(board_size)
+    if player_queens[0].get_color().upper() == "WHITE":
+        color = WHITE_QUEEN
+    else:
+        color = BLACK_QUEEN
     for queen in player_queens:
         queen_position = queen.get_position()
         px, py = queen_position
@@ -47,7 +52,9 @@ def move_generator(player_queens):
         # check movement up:
         while 0 <= px - i:
             if is_move_legal(queen_position, [px - i, py], size, board_state):
+                board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px - i, py])
+                board_state[queen_position[0]][queen_position[1]] = color
                 for arrow in arrows:
                     move_list.append([queen_position, [px - i, py], arrow])
                 i += 1
@@ -57,7 +64,9 @@ def move_generator(player_queens):
         # check movement down:
         while px + i < size:
             if is_move_legal(queen_position, [px + i, py], size, board_state):
+                board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px + i, py])
+                board_state[queen_position[0]][queen_position[1]] = color
                 for arrow in arrows:
                     move_list.append([queen_position, [px + i, py], arrow])
                 i += 1
@@ -67,7 +76,9 @@ def move_generator(player_queens):
         # check movement right:
         while py + i < size:
             if is_move_legal(queen_position, [px, py + i], size, board_state):
+                board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px, py + i])
+                board_state[queen_position[0]][queen_position[1]] = color
                 for arrow in arrows:
                     move_list.append([queen_position, [px, py + i], arrow])
                 i += 1
@@ -77,7 +88,9 @@ def move_generator(player_queens):
         # check movement left:
         while 0 <= py - i:
             if is_move_legal(queen_position, [px, py - i], size, board_state):
+                board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px, py - i])
+                board_state[queen_position[0]][queen_position[1]] = color
                 for arrow in arrows:
                     move_list.append([queen_position, [px, py - i], arrow])
                 i += 1
@@ -87,7 +100,9 @@ def move_generator(player_queens):
         # check movement up-left:
         while 0 <= px - i and 0 <= py - i:
             if is_move_legal(queen_position, [px - i, py - i], size, board_state):
+                board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator(([px - i, py - i]))
+                board_state[queen_position[0]][queen_position[1]] = color
                 for arrow in arrows:
                     move_list.append([queen_position, [px - i, py - i], arrow])
                 i += 1
@@ -97,7 +112,9 @@ def move_generator(player_queens):
         # check movement up-right:
         while 0 <= px - i and py + i < size:
             if is_move_legal(queen_position, [px - i, py + i], size, board_state):
+                board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px - i, py + i])
+                board_state[queen_position[0]][queen_position[1]] = color
                 for arrow in arrows:
                     move_list.append([queen_position, [px - i, py + i], arrow])
                 i += 1
@@ -107,7 +124,9 @@ def move_generator(player_queens):
         # check movement down-left:
         while px + i < size and 0 <= py - i:
             if is_move_legal(queen_position, [px + i, py - i], size, board_state):
+                board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px + i, py - i])
+                board_state[queen_position[0]][queen_position[1]] = color
                 for arrow in arrows:
                     move_list.append([queen_position, [px + i, py - i], arrow])
                 i += 1
@@ -117,7 +136,9 @@ def move_generator(player_queens):
         # check movement down-right:
         while px + i < size and py + i < size:
             if is_move_legal(queen_position, [px + i, py + i], size, board_state):
+                board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px + i, py + i])
+                board_state[queen_position[0]][queen_position[1]] = color
                 for arrow in arrows:
                     move_list.append([queen_position, [px + i, py + i], arrow])
                 i += 1
@@ -236,7 +257,6 @@ def undo_move_to_board(move, player):
 # Next step we need to do is find how we can clean the move_table from data of illegal moves, or maybe not? is this
 # table holds a huge amount of data? not really, the amount of cells in the table is huge but the values hold small data
 def add_to_zobrist_hash_table(key, value, move, depth, son_key, player_color, max_depth):
-
     if key not in hash_table:
         hash_table[key] = [value, move, depth, depth + turn_count, son_key, player_color, max_depth - depth]
     else:
@@ -249,7 +269,7 @@ def add_to_zobrist_hash_table(key, value, move, depth, son_key, player_color, ma
                 hash_table.update({key: new_data})
 
 
-def soft_evaluate():   # TODO first we will check if we calc the move by the territory-mobility evaluation
+def soft_evaluate():  # TODO first we will check if we calc the move by the territory-mobility evaluation
     key = compute_hash(board_state)
     if key in hash_table:
         data = hash_table[key]
@@ -274,10 +294,10 @@ def sort_moves(moves_to_sort, player):
         undo_move_to_board(move, player)
     sorted_max_moves = collections.OrderedDict(sorted(moves_scores.items()))
     sorted_list = list(sorted_max_moves.values())
-    #if current_depth - 1 in killer_moves:
-     #   for killer_move in killer_moves[current_depth - 1]:
-      #      if killer_move in sorted_list:
-       #         sorted_list = killer_move + sorted_list.pop(sorted_list.index(killer_move))
+    # if current_depth - 1 in killer_moves:
+    #   for killer_move in killer_moves[current_depth - 1]:
+    #      if killer_move in sorted_list:
+    #         sorted_list = killer_move + sorted_list.pop(sorted_list.index(killer_move))
     return sorted_list
 
 
@@ -294,7 +314,7 @@ def alpha_beta(depth, alpha, beta):
         son_to_save = None
         key = compute_hash(board_state)
         if key not in hash_table:
-            value = evaluate(players[(current_depth+1) % 2][2])
+            value = evaluate(players[(current_depth + 1) % 2][2])
         else:
             data = hash_table[key]
             value = data[0]
@@ -321,16 +341,17 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             alpha = max(alpha, max_evaluation)
             if beta <= alpha:
-                #if current_depth - 1 in killer_moves:
-                 #   if move not in killer_moves[current_depth-1]:
-                  #      if len(killer_moves[current_depth-1]) == 2:
-                   #         killer_moves[current_depth - 1] = move + [killer_moves[current_depth-1][0]]
-                    #    elif len(killer_moves[current_depth - 1]) == 1:
-                     #       killer_moves[current_depth - 1] = move + [
-                      #          killer_moves[current_depth - 1]]  # killer Move produced a cut-off
-                       # else:
-                        #    killer_moves[current_depth - 1] = move
-                    break
+                # if current_depth - 1 in killer_moves:
+                #   if move not in killer_moves[current_depth-1]:
+                #      if len(killer_moves[current_depth-1]) == 2:
+                #         killer_moves[current_depth - 1] = move + [killer_moves[current_depth-1][0]]
+                #    elif len(killer_moves[current_depth - 1]) == 1:
+                #       killer_moves[current_depth - 1] = move + [
+                #          killer_moves[current_depth - 1]]  # killer Move produced a cut-off
+                # else:
+                #    killer_moves[current_depth - 1] = move
+                print("Max-P")
+                break
         return max_evaluation
 
     else:
@@ -349,17 +370,18 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             beta = min(beta, min_evaluation)
             if beta <= alpha:
-                #if current_depth - 1 in killer_moves:
+                # if current_depth - 1 in killer_moves:
                 #    if move not in killer_moves[current_depth - 1]:  # TODO adding the killer move
-                 #       if len(killer_moves[current_depth - 1]) == 2:
-                  #          killer_moves[current_depth - 1] = move + [killer_moves[current_depth - 1][0]]
-                   #         print(killer_moves[current_depth - 1])
-                    #    elif len(killer_moves[current_depth - 1]) == 1:
-                     #       killer_moves[current_depth - 1] = move + [
-                      #          killer_moves[current_depth - 1]]  # killer Move produced a cut-off
-                       # else:
-                        #    killer_moves[current_depth - 1] = move
-                   # print("P")
+                #       if len(killer_moves[current_depth - 1]) == 2:
+                #          killer_moves[current_depth - 1] = move + [killer_moves[current_depth - 1][0]]
+                #         print(killer_moves[current_depth - 1])
+                #    elif len(killer_moves[current_depth - 1]) == 1:
+                #       killer_moves[current_depth - 1] = move + [
+                #          killer_moves[current_depth - 1]]  # killer Move produced a cut-off
+                # else:
+                #    killer_moves[current_depth - 1] = move
+                # print("P")
+                print("Min-P")
                 break
         return min_evaluation
 
@@ -402,7 +424,7 @@ def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q,
     for key in hash_table:
         data = hash_table[key]
         # {value, move, depth, depth + turn_count, father_son, player_color}
-        if data[0] == val and data[3] == turn_count+1 and data[5] == max_player[2]:
+        if data[0] == val and data[3] == turn_count + 1 and data[5] == max_player[2]:
             move = data[1]
             # print(key)
             break

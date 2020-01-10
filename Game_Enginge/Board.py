@@ -230,13 +230,13 @@ while True:
             max_depth = 2
 
         if players[i][1].upper() == "WHITE":
-            move = iterative_deepening_search(copy.deepcopy(board_matrix), 2, board_size,
-                                              copy.deepcopy(white_queens_setup),
-                                              copy.deepcopy(black_queen_setup), turn_count, ai_time / 10)
+            move = iterative_deepening_search(board_matrix, 2, board_size,
+                                              white_queens_setup,
+                                              black_queen_setup, turn_count, ai_time / 10)
         else:
-            move = iterative_deepening_search(copy.deepcopy(board_matrix), max_depth, board_size,
-                                              copy.deepcopy(black_queen_setup),
-                                              copy.deepcopy(white_queens_setup), turn_count, ai_time / 10)
+            move = iterative_deepening_search(board_matrix, max_depth, board_size,
+                                              black_queen_setup,
+                                              white_queens_setup, turn_count, ai_time / 10)
         current_queen_position, new_queen_position, arrow_position = move
         ai_move(current_queen_position, new_queen_position, arrow_position, players[i][1])
         move_string = SI.translate_cordinate(current_queen_position, new_queen_position, arrow_position)
