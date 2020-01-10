@@ -25,9 +25,9 @@ def set_board_size():
         if (int(size) == 10) or (int(size) == 6):
             board_size = size
             if int(board_size) == 10:
-                SI.SetLettersDictionary(LETTERS_DICTIONARY_10)
+                SI.set_letters_dictionary(LETTERS_DICTIONARY_10)
             elif int(board_size) == 6:
-                SI.SetLettersDictionary(LETTERS_DICTIONARY_06)
+                SI.set_letters_dictionary(LETTERS_DICTIONARY_06)
             break
 
         print("Please enter a valid size")
@@ -85,7 +85,7 @@ def player_move(player):
         queen_to_draw = BLACK_QUEEN
     while True:
         move_input = input("Please enter a move")  # According to the rules QM-WTM/AP
-        current_position, new_position, arrow = SI.TranslatingMove(move_input)
+        current_position, new_position, arrow = SI.translating_move(move_input)
         queen_to_move = find_queen(current_position, player)
         # Check if queen is chosen
         if queen_to_move == "No legal queen":
@@ -230,7 +230,7 @@ while True:
             max_depth = 2
 
         if players[i][1].upper() == "WHITE":
-            move = iterative_deepening_search(copy.deepcopy(board_matrix), max_depth, board_size,
+            move = iterative_deepening_search(copy.deepcopy(board_matrix), 2, board_size,
                                               copy.deepcopy(white_queens_setup),
                                               copy.deepcopy(black_queen_setup), turn_count, ai_time / 10)
         else:
@@ -239,12 +239,12 @@ while True:
                                               copy.deepcopy(white_queens_setup), turn_count, ai_time / 10)
         current_queen_position, new_queen_position, arrow_position = move
         ai_move(current_queen_position, new_queen_position, arrow_position, players[i][1])
-        move_string = SI.TranslateCordinates(current_queen_position, new_queen_position, arrow_position)
+        move_string = SI.translate_cordinate(current_queen_position, new_queen_position, arrow_position)
 
         elapsedTime = time.time() - startingTime
         ai_time -= elapsedTime
         print_board()
-        print(SI.MoveOutput(move_string, depth_found, elapsedTime))
+        print(SI.move_output(move_string, depth_found, elapsedTime))
         # Here we need to print another technical data (What we got from our function)
         ## UNCOMMENT THIS--- SI.PrintExtraData(depth, PV, PVEvaluation, pruningData, hashAccessNumbers)
 
