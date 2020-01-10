@@ -10,10 +10,10 @@ import random
 MIN = -1000
 MAX = 1000
 board_state = []
-board_size = 0
+board_size: int = 0
 players = []
 current_depth = 0
-move_list = []
+# move_list = []
 son_to_save = None
 turn_count = 0
 pruning_count = 0
@@ -37,89 +37,164 @@ def evaluate(color):
     return score
 
 
-def find_legal_moves(queens, is_arrow, color, arrow_start_position=None):
-    global current_queen
-
-    for queen in queens:
-        if is_arrow:
-            px, py = arrow_start_position
-        else:
-            current_queen = queen.get_position()
-            px, py = current_queen
-        for step in range(1, int(board_size)):
-            # Check move up
-            if is_move_legal([px, py], [px - step, py], board_size, board_state):
-                if not is_arrow:
-                    board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, [px - step, py])
-                    board_state[px][py] = color
-                else:
-                    if [current_queen, arrow_start_position, [px - step, py]] not in move_list:
-                        move_list.append([current_queen, arrow_start_position, [px - step, py]])
-            # Check move down
-            if is_move_legal([px, py], [px + step, py], board_size, board_state):
-                if not is_arrow:
-                    board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, [px + step, py])
-                    board_state[px][py] = color
-                else:
-                    if [current_queen, arrow_start_position, [px + step, py]] not in move_list:
-                        move_list.append([current_queen, arrow_start_position, [px + step, py]])
-            # Check right move
-            if is_move_legal([px, py], [px, py + step], board_size, board_state):
-                if not is_arrow:
-                    board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, [px, py + step])
-                    board_state[px][py] = color
-                else:
-                    if [current_queen, arrow_start_position, [px, py + step]] not in move_list:
-                        move_list.append([current_queen, arrow_start_position, [px, py + step]])
-            # Check left move
-            if is_move_legal([px, py], [px, py - step], board_size, board_state):
-                if not is_arrow:
-                    board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, [px, py - step])
-                    board_state[px][py] = color
-                else:
-                    if [current_queen, arrow_start_position, [px, py - step]] not in move_list:
-                        move_list.append([current_queen, arrow_start_position, [px, py - step]])
-            # Check up-left diagonal
-            if is_move_legal([px, py], [px - step, py - step], board_size, board_state):
-                if not is_arrow:
-                    board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, [px - step, py - step])
-                    board_state[px][py] = color
-                else:
-                    if [current_queen, arrow_start_position, [px - step, py - step]] not in move_list:
-                        move_list.append([current_queen, arrow_start_position, [px - step, py - step]])
-            # Check down-right diagonal
-            if is_move_legal([px, py], [px + step, py + step], board_size, board_state):
-                if not is_arrow:
-                    board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, [px + step, py + step])
-                    board_state[px][py] = color
-                else:
-                    if [current_queen, arrow_start_position, [px + step, py + step]] not in move_list:
-                        move_list.append([current_queen, arrow_start_position, [px + step, py + step]])
-            # Check up-right diagonal
-            if is_move_legal([px, py], [px - step, py + step], board_size, board_state):
-                if not is_arrow:
-                    board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, [px - step, py + step])
-                    board_state[px][py] = color
-                else:
-                    if [current_queen, arrow_start_position, [px - step, py + step]] not in move_list:
-                        move_list.append([current_queen, arrow_start_position, [px - step, py + step]])
-            # Check down-left diagonal
-            if is_move_legal([px, py], [px + step, py - step], board_size, board_state):
-                if not is_arrow:
-                    board_state[px][py] = EMPTY_SPACE
-                    find_legal_moves(queens, True, color, [px + step, py - step])
-                    board_state[px][py] = color
-                else:
-                    if [current_queen, arrow_start_position, [px + step, py - step]] not in move_list:
-                        move_list.append([current_queen, arrow_start_position, [px + step, py - step]])
+def move_generator(player_queens):
+    move_list = []
+    size = int(board_size)
+    for queen in player_queens:
+        queen_position = queen.get_position()
+        px, py = queen_position
+        i = 1
+        # check movement up:
+        while 0 <= px - i:
+            if is_move_legal(queen_position, [px - i, py], size, board_state):
+                arrows = arrow_move_generator([px - i, py])
+                for arrow in arrows:
+                    move_list.append([queen_position, [px - i, py], arrow])
+                i += 1
+            else:
+                break
+        i = 1
+        # check movement down:
+        while px + i < size:
+            if is_move_legal(queen_position, [px + i, py], size, board_state):
+                arrows = arrow_move_generator([px + i, py])
+                for arrow in arrows:
+                    move_list.append([queen_position, [px + i, py], arrow])
+                i += 1
+            else:
+                break
+        i = 1
+        # check movement right:
+        while py + i < size:
+            if is_move_legal(queen_position, [px, py + i], size, board_state):
+                arrows = arrow_move_generator([px, py + i])
+                for arrow in arrows:
+                    move_list.append([queen_position, [px, py + i], arrow])
+                i += 1
+            else:
+                break
+        i = 1
+        # check movement left:
+        while 0 <= py - i:
+            if is_move_legal(queen_position, [px, py - i], size, board_state):
+                arrows = arrow_move_generator([px, py - i])
+                for arrow in arrows:
+                    move_list.append([queen_position, [px, py - i], arrow])
+                i += 1
+            else:
+                break
+        i = 1
+        # check movement up-left:
+        while 0 <= px - i and 0 <= py - i:
+            if is_move_legal(queen_position, [px - i, py - i], size, board_state):
+                arrows = arrow_move_generator(([px - i, py - i]))
+                for arrow in arrows:
+                    move_list.append([queen_position, [px - i, py - i], arrow])
+                i += 1
+            else:
+                break
+        i = 1
+        # check movement up-right:
+        while 0 <= px - i and py + i < size:
+            if is_move_legal(queen_position, [px - i, py + i], size, board_state):
+                arrows = arrow_move_generator([px - i, py + i])
+                for arrow in arrows:
+                    move_list.append([queen_position, [px - i, py + i], arrow])
+                i += 1
+            else:
+                break
+        i = 1
+        # check movement down-left:
+        while px + i < size and 0 <= py - i:
+            if is_move_legal(queen_position, [px + i, py - i], size, board_state):
+                arrows = arrow_move_generator([px + i, py - i])
+                for arrow in arrows:
+                    move_list.append([queen_position, [px + i, py - i], arrow])
+                i += 1
+            else:
+                break
+        i = 1
+        # check movement down-right:
+        while px + i < size and py + i < size:
+            if is_move_legal(queen_position, [px + i, py + i], size, board_state):
+                arrows = arrow_move_generator([px + i, py + i])
+                for arrow in arrows:
+                    move_list.append([queen_position, [px + i, py + i], arrow])
+                i += 1
+            else:
+                break
     return move_list
+
+
+def arrow_move_generator(starting_position):
+    arrow_list = []
+    px, py = starting_position
+    size = int(board_size)
+    i = 1
+    # check movement up:
+    while 0 <= px - i:
+        if is_move_legal(starting_position, [px - i, py], size, board_state):
+            arrow_list.append([px - i, py])
+            i += 1
+        else:
+            break
+    i = 1
+    # check movement down:
+    while px + i < size:
+        if is_move_legal(starting_position, [px + i, py], size, board_state):
+            arrow_list.append([px + i, py])
+            i += 1
+        else:
+            break
+    i = 1
+    # check movement right:
+    while py + i < size:
+        if is_move_legal(starting_position, [px, py + i], size, board_state):
+            arrow_list.append([px, py + i])
+            i += 1
+        else:
+            break
+    i = 1
+    # check movement left:
+    while 0 <= py - i:
+        if is_move_legal(starting_position, [px, py - i], size, board_state):
+            arrow_list.append([px, py - i])
+            i += 1
+        else:
+            break
+    i = 1
+    # check movement up-left:
+    while 0 <= px - i and 0 <= py - i:
+        if is_move_legal(starting_position, [px - i, py - i], size, board_state):
+            arrow_list.append([px - i, py - i])
+            i += 1
+        else:
+            break
+    i = 1
+    # check movement up-right:
+    while 0 <= px - i and py + i < size:
+        if is_move_legal(starting_position, [px - i, py + i], size, board_state):
+            arrow_list.append([px - i, py + i])
+            i += 1
+        else:
+            break
+    i = 1
+    # check movement down-left:
+    while px + i < size and 0 <= py - i:
+        if is_move_legal(starting_position, [px + i, py - i], size, board_state):
+            arrow_list.append([px + i, py - i])
+            i += 1
+        else:
+            break
+    i = 1
+    # check movement down-right:
+    while px + i < size and py + i < size:
+        if is_move_legal(starting_position, [px + i, py + i], size, board_state):
+            arrow_list.append([px + i, py + i])
+            i += 1
+        else:
+            break
+    return arrow_list
 
 
 def update_move_to_board(move, queens, color):
@@ -199,10 +274,10 @@ def sort_moves(moves_to_sort, player):
         undo_move_to_board(move, player)
     sorted_max_moves = collections.OrderedDict(sorted(moves_scores.items()))
     sorted_list = list(sorted_max_moves.values())
-    if current_depth - 1 in killer_moves:
-        for killer_move in killer_moves[current_depth - 1]:
-            if killer_move in sorted_list:
-                sorted_list = killer_move + sorted_list.pop(sorted_list.index(killer_move))
+    #if current_depth - 1 in killer_moves:
+     #   for killer_move in killer_moves[current_depth - 1]:
+      #      if killer_move in sorted_list:
+       #         sorted_list = killer_move + sorted_list.pop(sorted_list.index(killer_move))
     return sorted_list
 
 
@@ -232,9 +307,7 @@ def alpha_beta(depth, alpha, beta):
 
     if current_player[1]:
         max_evaluation = MIN
-        moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
-        move_list.clear()
-        moves = sort_moves(moves, current_player)
+        moves = move_generator(current_player[0])
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -248,23 +321,21 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             alpha = max(alpha, max_evaluation)
             if beta <= alpha:
-                if current_depth - 1 in killer_moves:
-                    if move not in killer_moves[current_depth-1]:
-                        if len(killer_moves[current_depth-1]) == 2:
-                            killer_moves[current_depth - 1] = move + [killer_moves[current_depth-1][0]]
-                        elif len(killer_moves[current_depth - 1]) == 1:
-                            killer_moves[current_depth - 1] = move + [
-                                killer_moves[current_depth - 1]]  # killer Move produced a cut-off
-                        else:
-                            killer_moves[current_depth - 1] = move
+                #if current_depth - 1 in killer_moves:
+                 #   if move not in killer_moves[current_depth-1]:
+                  #      if len(killer_moves[current_depth-1]) == 2:
+                   #         killer_moves[current_depth - 1] = move + [killer_moves[current_depth-1][0]]
+                    #    elif len(killer_moves[current_depth - 1]) == 1:
+                     #       killer_moves[current_depth - 1] = move + [
+                      #          killer_moves[current_depth - 1]]  # killer Move produced a cut-off
+                       # else:
+                        #    killer_moves[current_depth - 1] = move
                     break
         return max_evaluation
 
     else:
         min_evaluation = MAX
-        moves = deepcopy(find_legal_moves(current_player[0], False, current_player[3]))
-        move_list.clear()
-        moves = sort_moves(moves, current_player)
+        moves = move_generator(current_player[0])
         while len(moves) != 0:
             move = moves.pop(0)
             move_count += 1
@@ -278,16 +349,16 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             beta = min(beta, min_evaluation)
             if beta <= alpha:
-                if current_depth - 1 in killer_moves:
-                    if move not in killer_moves[current_depth - 1]:  # TODO adding the killer move
-                        if len(killer_moves[current_depth - 1]) == 2:
-                            killer_moves[current_depth - 1] = move + [killer_moves[current_depth - 1][0]]
-                            print(killer_moves[current_depth - 1])
-                        elif len(killer_moves[current_depth - 1]) == 1:
-                            killer_moves[current_depth - 1] = move + [
-                                killer_moves[current_depth - 1]]  # killer Move produced a cut-off
-                        else:
-                            killer_moves[current_depth - 1] = move
+                #if current_depth - 1 in killer_moves:
+                #    if move not in killer_moves[current_depth - 1]:  # TODO adding the killer move
+                 #       if len(killer_moves[current_depth - 1]) == 2:
+                  #          killer_moves[current_depth - 1] = move + [killer_moves[current_depth - 1][0]]
+                   #         print(killer_moves[current_depth - 1])
+                    #    elif len(killer_moves[current_depth - 1]) == 1:
+                     #       killer_moves[current_depth - 1] = move + [
+                      #          killer_moves[current_depth - 1]]  # killer Move produced a cut-off
+                       # else:
+                        #    killer_moves[current_depth - 1] = move
                    # print("P")
                 break
         return min_evaluation

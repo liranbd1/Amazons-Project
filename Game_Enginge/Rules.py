@@ -58,7 +58,9 @@ def is_move_legal(current_position, new_position, board_size, board_matrix):
     if board_matrix[new_position[0]][new_position[1]] != EMPTY_SPACE:
      #   print("Please enter a valid position for the queen")
         return False
-
+    # Check that we are not trying to stay in place
+    if current_position == new_position:
+        return False
     # Check if the move is possible by this queen (Moving like a queen not a horse)
     current_position_x, current_position_y = current_position
     new_position_x, new_position_y = new_position
