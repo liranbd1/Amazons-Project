@@ -2,8 +2,7 @@ from Game_Enginge.Constants import *
 import time
 from Game_Enginge.Queen import *
 from Game_Enginge import Rules, StringInput as SI
-import copy
-from AI.Enchantments.ZorbistHashing import init_zobrist_table, hash_table, compute_hash,clear_hash
+from AI.Enchantments.ZorbistHashing import init_zobrist_table, hash_table, compute_hash, clear_hash
 from AI.Search_tree.IterativeDeepening import iterative_deepening_search, depth_found
 # Variables to create the board initial state
 board_size = 0
@@ -148,7 +147,9 @@ def ai_move(current_position, new_position, arrow_pos, color):
         queen = WHITE_QUEEN
     else:
         queen = BLACK_QUEEN
+    print(color)
     queen_to_move = find_queen(current_position, color)
+    print(queen_to_move)
     board_matrix[current_position[0]][current_position[1]] = EMPTY_SPACE
     board_matrix[new_position[0]][new_position[1]] = queen
     queen_to_move.set_new_position(new_position)
@@ -235,15 +236,15 @@ while True:
                 max_depth = state_data[6]
         else:
             max_depth = 2
-        print(max_depth)
         if players[i][1].upper() == "WHITE":
-            move = iterative_deepening_search(board_matrix, 4, board_size,
+            move = iterative_deepening_search(board_matrix, 2, board_size,
                                               white_queens_setup,
                                               black_queen_setup, turn_count, ai_time / 10)
         else:
-            move = iterative_deepening_search(board_matrix, 4, board_size,
+            move = iterative_deepening_search(board_matrix, 2, board_size,
                                               black_queen_setup,
                                               white_queens_setup, turn_count, ai_time / 10)
+        print(move)
         current_queen_position, new_queen_position, arrow_position = move
         ai_move(current_queen_position, new_queen_position, arrow_position, players[i][1])
         move_string = SI.translate_cordinate(current_queen_position, new_queen_position, arrow_position)

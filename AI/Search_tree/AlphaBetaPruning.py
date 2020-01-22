@@ -1,4 +1,5 @@
-from AI.Heuristics.TerriMobEval import TerriMobEval
+from AI.Heuristics.TerriMobEval import TerritoryMobilityEvaluation
+from AI.Heuristics.MobilityEvaluation import MobilityEvaluation
 from Game_Enginge.Rules import is_move_legal
 from Game_Enginge.Constants import EMPTY_SPACE, WHITE_QUEEN, BLACK_QUEEN, ARROW_SPACE
 from copy import deepcopy
@@ -6,6 +7,7 @@ from AI.Enchantments.ZorbistHashing import compute_hash, hash_table
 from AI.Enchantments.Killer_Moves import killer_moves
 import collections
 import random
+from time import time
 
 MIN = -1000
 MAX = 1000
@@ -18,18 +20,9 @@ turn_count = 0
 pruning_count = 0
 max_depth_found = 0
 
+
 # What our Hash table need to hold
 # value, Move, How deep we looked, father/son, current turn(How much deep we looked from the start of the game), player
-
-
-
-
-def evaluate(color):
-    evaluation = TerriMobEval(board_state, board_size, color)
-    territory_score, mobility_score = evaluation.playerEval()
-    score = 0.8 * territory_score + 0.2 * mobility_score
-    return score
-
 
 def move_generator(player_queens):
     move_list = []
@@ -44,7 +37,7 @@ def move_generator(player_queens):
         i = 1
         # check movement up:
         while 0 <= px - i:
-            if is_move_legal(queen_position, [px - i, py], size, board_state):
+            if board_state[px - i][py] == EMPTY_SPACE:  # TODO not checking by is move legal
                 board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px - i, py])
                 board_state[queen_position[0]][queen_position[1]] = color
@@ -56,7 +49,7 @@ def move_generator(player_queens):
         i = 1
         # check movement down:
         while px + i < size:
-            if is_move_legal(queen_position, [px + i, py], size, board_state):
+            if board_state[px + i][py] == EMPTY_SPACE:  # TODO not checking by is move legal
                 board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px + i, py])
                 board_state[queen_position[0]][queen_position[1]] = color
@@ -68,7 +61,7 @@ def move_generator(player_queens):
         i = 1
         # check movement right:
         while py + i < size:
-            if is_move_legal(queen_position, [px, py + i], size, board_state):
+            if board_state[px][py + i] == EMPTY_SPACE:  # TODO not checking by is move legal
                 board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px, py + i])
                 board_state[queen_position[0]][queen_position[1]] = color
@@ -80,7 +73,7 @@ def move_generator(player_queens):
         i = 1
         # check movement left:
         while 0 <= py - i:
-            if is_move_legal(queen_position, [px, py - i], size, board_state):
+            if board_state[px][py - i] == EMPTY_SPACE:  # TODO not checking by is move legal
                 board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px, py - i])
                 board_state[queen_position[0]][queen_position[1]] = color
@@ -92,7 +85,7 @@ def move_generator(player_queens):
         i = 1
         # check movement up-left:
         while 0 <= px - i and 0 <= py - i:
-            if is_move_legal(queen_position, [px - i, py - i], size, board_state):
+            if board_state[px - i][py - i] == EMPTY_SPACE:  # TODO not checking by is move legal
                 board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator(([px - i, py - i]))
                 board_state[queen_position[0]][queen_position[1]] = color
@@ -104,7 +97,7 @@ def move_generator(player_queens):
         i = 1
         # check movement up-right:
         while 0 <= px - i and py + i < size:
-            if is_move_legal(queen_position, [px - i, py + i], size, board_state):
+            if board_state[px - i][py + i] == EMPTY_SPACE:  # TODO not checking by is move legal
                 board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px - i, py + i])
                 board_state[queen_position[0]][queen_position[1]] = color
@@ -116,7 +109,7 @@ def move_generator(player_queens):
         i = 1
         # check movement down-left:
         while px + i < size and 0 <= py - i:
-            if is_move_legal(queen_position, [px + i, py - i], size, board_state):
+            if board_state[px + i][py - i] == EMPTY_SPACE:  # TODO not checking by is move legal
                 board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px + i, py - i])
                 board_state[queen_position[0]][queen_position[1]] = color
@@ -128,7 +121,7 @@ def move_generator(player_queens):
         i = 1
         # check movement down-right:
         while px + i < size and py + i < size:
-            if is_move_legal(queen_position, [px + i, py + i], size, board_state):
+            if board_state[px + i][py + i] == EMPTY_SPACE:  # TODO not checking by is move legal
                 board_state[queen_position[0]][queen_position[1]] = EMPTY_SPACE
                 arrows = arrow_move_generator([px + i, py + i])
                 board_state[queen_position[0]][queen_position[1]] = color
@@ -137,6 +130,7 @@ def move_generator(player_queens):
                 i += 1
             else:
                 break
+    random.shuffle(move_list)  # TODO shuffle the move list
     return move_list
 
 
@@ -147,7 +141,7 @@ def arrow_move_generator(starting_position):
     i = 1
     # check movement up:
     while 0 <= px - i:
-        if is_move_legal(starting_position, [px - i, py], size, board_state):
+        if board_state[px - i][py] == EMPTY_SPACE:  # TODO not checking by is move legal (same for all arrows)
             arrow_list.append([px - i, py])
             i += 1
         else:
@@ -155,7 +149,7 @@ def arrow_move_generator(starting_position):
     i = 1
     # check movement down:
     while px + i < size:
-        if is_move_legal(starting_position, [px + i, py], size, board_state):
+        if board_state[px + i][py] == EMPTY_SPACE:
             arrow_list.append([px + i, py])
             i += 1
         else:
@@ -163,7 +157,7 @@ def arrow_move_generator(starting_position):
     i = 1
     # check movement right:
     while py + i < size:
-        if is_move_legal(starting_position, [px, py + i], size, board_state):
+        if board_state[px][py + i] == EMPTY_SPACE:
             arrow_list.append([px, py + i])
             i += 1
         else:
@@ -171,7 +165,7 @@ def arrow_move_generator(starting_position):
     i = 1
     # check movement left:
     while 0 <= py - i:
-        if is_move_legal(starting_position, [px, py - i], size, board_state):
+        if board_state[px][py - i] == EMPTY_SPACE:
             arrow_list.append([px, py - i])
             i += 1
         else:
@@ -179,7 +173,7 @@ def arrow_move_generator(starting_position):
     i = 1
     # check movement up-left:
     while 0 <= px - i and 0 <= py - i:
-        if is_move_legal(starting_position, [px - i, py - i], size, board_state):
+        if board_state[px - i][py - i] == EMPTY_SPACE:
             arrow_list.append([px - i, py - i])
             i += 1
         else:
@@ -187,7 +181,7 @@ def arrow_move_generator(starting_position):
     i = 1
     # check movement up-right:
     while 0 <= px - i and py + i < size:
-        if is_move_legal(starting_position, [px - i, py + i], size, board_state):
+        if board_state[px - i][py + i] == EMPTY_SPACE:
             arrow_list.append([px - i, py + i])
             i += 1
         else:
@@ -195,7 +189,7 @@ def arrow_move_generator(starting_position):
     i = 1
     # check movement down-left:
     while px + i < size and 0 <= py - i:
-        if is_move_legal(starting_position, [px + i, py - i], size, board_state):
+        if board_state[px + i][py - i] == EMPTY_SPACE:
             arrow_list.append([px + i, py - i])
             i += 1
         else:
@@ -203,7 +197,7 @@ def arrow_move_generator(starting_position):
     i = 1
     # check movement down-right:
     while px + i < size and py + i < size:
-        if is_move_legal(starting_position, [px + i, py + i], size, board_state):
+        if board_state[px + i][py + i] == EMPTY_SPACE:
             arrow_list.append([px + i, py + i])
             i += 1
         else:
@@ -218,14 +212,13 @@ def update_move_to_board(move, queens, color):
     old_queen, new_queen, arrow = move
     # need to update the queen list
     for queen in queens:
-        if old_queen == queen.get_position():
+        if old_queen == queen.get_position():  # TODO inserting the changes inside the loop
+            queen.set_new_position(new_queen)
+            board_state[old_queen[0]][old_queen[1]] = EMPTY_SPACE
+            board_state[new_queen[0]][new_queen[1]] = color
+            board_state[arrow[0]][arrow[1]] = ARROW_SPACE
+            current_depth += 1
             break
-
-    queen.set_new_position(new_queen)
-    board_state[old_queen[0]][old_queen[1]] = EMPTY_SPACE
-    board_state[new_queen[0]][new_queen[1]] = color
-    board_state[arrow[0]][arrow[1]] = ARROW_SPACE
-    current_depth += 1
 
 
 def undo_move_to_board(move, player):
@@ -234,15 +227,14 @@ def undo_move_to_board(move, player):
     pos_to_back, pos_to_del, arrow = move
 
     for queen in player[0]:
-        if pos_to_del == queen.get_position():
+        if pos_to_del == queen.get_position():  # TODO inserting the changes inside the loop
+            queen.set_new_position(pos_to_back)
+            board_state[pos_to_del[0]][pos_to_del[1]] = EMPTY_SPACE
+            board_state[pos_to_back[0]][pos_to_back[1]] = player[3]
+            if pos_to_back != arrow:
+                board_state[arrow[0]][arrow[1]] = EMPTY_SPACE
+            current_depth -= 1
             break
-
-    queen.set_new_position(pos_to_back)
-    board_state[pos_to_del[0]][pos_to_del[1]] = EMPTY_SPACE
-    board_state[pos_to_back[0]][pos_to_back[1]] = player[3]
-    if pos_to_back != arrow:
-        board_state[arrow[0]][arrow[1]] = EMPTY_SPACE
-    current_depth -= 1
 
 
 # This way our hash table will hold the value of the state_board, his son which is the best move from it and the move
@@ -264,6 +256,21 @@ def add_to_zobrist_hash_table(key, value, move, depth, son_key, player_color, ma
                 hash_table.update({key: new_data})
 
 
+def evaluate():  # TODO new territory mobility function
+
+    if players[current_depth % 2][1] is True:
+        player_queens = players[current_depth % 2][0]
+        enemy_queens = players[(current_depth+1) % 2][0]
+    else:
+        player_queens = players[(current_depth+1) % 2][0]
+        enemy_queens = players[current_depth % 2][0]
+
+    territory_score, mobility_score = TerritoryMobilityEvaluation(board_state, player_queens, enemy_queens, board_size)
+    random_score = random.randint(-10, 10)
+    score = 4 * territory_score + mobility_score + 0.2 * random_score
+    return score
+
+
 def soft_evaluate():  # TODO first we will check if we calc the move by the territory-mobility evaluation
     key = compute_hash(board_state)
     if key in hash_table:
@@ -274,25 +281,39 @@ def soft_evaluate():  # TODO first we will check if we calc the move by the terr
 
 
 def sort_moves(moves_to_sort, player):
+    start = time()
+    my_value = 0
+    enemy_value = 0
     moves_scores = {}
     iteration = 1
     for move in moves_to_sort:
         update_move_to_board(move, player[0], player[3])
         key = compute_hash(board_state)
         if key not in hash_table:
-            value = soft_evaluate()
+            if players[(current_depth+1) % 2][1] is True:
+                my_value = MobilityEvaluation(board_state, board_size, players[(current_depth+1) % 2][0])
+                enemy_value = MobilityEvaluation(board_state, board_size, players[current_depth % 2][0])
+            else:
+                enemy_value = MobilityEvaluation(board_state, board_size, players[(current_depth+1) % 2][0])
+                my_value = MobilityEvaluation(board_state, board_size, players[current_depth % 2][0])
+            value = my_value - enemy_value
         else:
             data = hash_table[key]
             value = data[0]
         moves_scores[value] = move  # TODO we will overwrite data here in some cases
         iteration += 1  # TODO ok?
         undo_move_to_board(move, player)
-    sorted_max_moves = collections.OrderedDict(sorted(moves_scores.items()))
+
+    if players[current_depth % 2] is True:  # TODO sorting the move by max or min player
+        sorted_max_moves = collections.OrderedDict(sorted(moves_scores.items(), reverse=True))
+    else:
+        sorted_max_moves = collections.OrderedDict(sorted(moves_scores.items()))
     sorted_list = list(sorted_max_moves.values())
-    # if current_depth - 1 in killer_moves:
-    #   for killer_move in killer_moves[current_depth - 1]:
-    #      if killer_move in sorted_list:
-    #         sorted_list = killer_move + sorted_list.pop(sorted_list.index(killer_move))
+    if current_depth - 1 in killer_moves:  # TODO adding killer moves
+        for killer_move in killer_moves[current_depth - 1]:
+            if killer_move in sorted_list:
+                sorted_list = killer_move + sorted_list.pop(sorted_list.index(killer_move))
+    end = time()
     return sorted_list
 
 
@@ -309,7 +330,7 @@ def alpha_beta(depth, alpha, beta):
         son_to_save = None
         key = compute_hash(board_state)
         if key not in hash_table:
-            value = evaluate(players[(current_depth + 1) % 2][2])
+            value = evaluate()
         else:
             data = hash_table[key]
             value = data[0]
@@ -319,7 +340,6 @@ def alpha_beta(depth, alpha, beta):
     move_count = 0
     # 1st stopping condition for the alpha_beta (Since we are not looking to the end for now this is efficient)
     # Will need to add a stopping condition where we are having the queens isolated
-
     if current_player[1]:
         max_evaluation = MIN
         moves = move_generator(current_player[0])
@@ -337,15 +357,15 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             alpha = max(alpha, max_evaluation)
             if beta <= alpha:
-                # if current_depth - 1 in killer_moves:
-                #   if move not in killer_moves[current_depth-1]:
-                #      if len(killer_moves[current_depth-1]) == 2:
-                #         killer_moves[current_depth - 1] = move + [killer_moves[current_depth-1][0]]
-                #    elif len(killer_moves[current_depth - 1]) == 1:
-                #       killer_moves[current_depth - 1] = move + [
-                #          killer_moves[current_depth - 1]]  # killer Move produced a cut-off
-                # else:
-                #    killer_moves[current_depth - 1] = move
+                if current_depth - 1 in killer_moves:
+                    if move not in killer_moves[current_depth - 1]:
+                        if len(killer_moves[current_depth - 1]) == 2:
+                            killer_moves[current_depth - 1] = move + [killer_moves[current_depth - 1][0]]
+                        elif len(killer_moves[current_depth - 1]) == 1:
+                            killer_moves[current_depth - 1] = \
+                                move + [killer_moves[current_depth - 1]]  # killer Move produced a cut-off
+                else:
+                    killer_moves[current_depth - 1] = move
                 break
         return max_evaluation
 
@@ -366,17 +386,15 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             beta = min(beta, min_evaluation)
             if beta <= alpha:
-                # if current_depth - 1 in killer_moves:
-                #    if move not in killer_moves[current_depth - 1]:  # TODO adding the killer move
-                #       if len(killer_moves[current_depth - 1]) == 2:
-                #          killer_moves[current_depth - 1] = move + [killer_moves[current_depth - 1][0]]
-                #         print(killer_moves[current_depth - 1])
-                #    elif len(killer_moves[current_depth - 1]) == 1:
-                #       killer_moves[current_depth - 1] = move + [
-                #          killer_moves[current_depth - 1]]  # killer Move produced a cut-off
-                # else:
-                #    killer_moves[current_depth - 1] = move
-                # print("P")
+                if current_depth - 1 in killer_moves:
+                    if move not in killer_moves[current_depth - 1]:
+                        if len(killer_moves[current_depth - 1]) == 2:
+                            killer_moves[current_depth - 1] = move + [killer_moves[current_depth - 1][0]]
+                        elif len(killer_moves[current_depth - 1]) == 1:
+                            killer_moves[current_depth - 1] = \
+                                move + [killer_moves[current_depth - 1]]  # killer Move produced a cut-off
+                else:
+                    killer_moves[current_depth - 1] = move
                 break
         return min_evaluation
 
@@ -423,7 +441,7 @@ def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q,
             # print(key)
             break
     if move == 0 or len(move) != 3:
-        return False
+        return 1, False # TODO adding 1 to value to unpack if there is no move in the current window
         # raise Exception("Didn't find a viable move")
 
     return val, move

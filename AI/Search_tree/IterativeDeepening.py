@@ -4,7 +4,7 @@ from time import time
 import math
 
 depth_found = 0
-WINDOW_SIZE = 25  # For the Aspiration Search
+WINDOW_SIZE = 50  # For the Aspiration Search
 MAX = math.inf
 
 
@@ -25,6 +25,7 @@ def iterative_deepening_search(starting_board_matrix, max_depth, size, player_qu
         else:
             val, move = aspiration(starting_board_matrix, ids_depth, val, size, player_queens, enemy_q,
                                    turn_number)
+        print("Deepening")
         #end = time()
         #print(end-start)
         #print(move)
@@ -39,6 +40,7 @@ def iterative_deepening_search(starting_board_matrix, max_depth, size, player_qu
     # print("Elapsed time: {0}".format(elapsed_time))
     end_time = time()
     print("Finish deepening", end_time-start_time)
+    print(global_best)
     return global_best_move
 
 
