@@ -4,6 +4,9 @@ from Game_Enginge.Queen import *
 from Game_Enginge import Rules, StringInput as SI
 from AI.Enchantments.ZorbistHashing import init_zobrist_table, hash_table, compute_hash, clear_hash
 from AI.Search_tree.IterativeDeepening import iterative_deepening_search, depth_found
+from AI.Search_tree.GameRules import GameRules as gr
+from AI.Search_tree.MCTS import MCTS_with_UCT as mcts
+
 # Variables to create the board initial state
 board_size = 0
 # (y,x)
@@ -14,6 +17,7 @@ ai_time = 0
 player_turn = ["White", "Black"]
 players = [["", player_turn[0]], ["", player_turn[1]]]
 turn_count = 0
+game_rules = 0
 
 
 def set_board_size():
@@ -61,7 +65,6 @@ def queen_position_setup():
         start_position_black = BLACK_QUEENS_START_06
 
     for i in range(len(start_position_white)):
-
         white_queen_position = start_position_white[i]
         white_queen_to_add = Queen(
             [white_queen_position[0], white_queen_position[1]], "White"
@@ -76,7 +79,7 @@ def queen_position_setup():
 
 
 def player_move(player):
-    #global arrowsPosition
+    # global arrowsPosition
     if player == "White":
         queen_to_draw = WHITE_QUEEN
     else:
@@ -98,7 +101,7 @@ def player_move(player):
                 board_matrix[new_position[0]][new_position[1]] = queen_to_draw
                 queen_to_move.set_new_position(new_position)
                 board_matrix[arrow[0]][arrow[1]] = ARROW_SPACE
-                #arrowsPosition.append(arrow)
+                # arrowsPosition.append(arrow)
                 break
             else:
                 board_matrix[current_position[0]][current_position[1]] = queen_to_draw
@@ -201,6 +204,12 @@ def who_starts():
         else:
             print("Please enter a valid input")
 
+
+def init_game_rules():
+    global game_rules
+    game_rules = gr(board_size)
+
+
 def are_we_in_the_endgame_now():
     # we need to get to matrix of relative territory for each color
     pass
@@ -212,8 +221,22 @@ def initialize_board():
     setup_board()
     set_game_mode()
     set_timer()
+    init_game_rules()
     print_board()
     init_zobrist_table(board_size)
+
+
+# state = [board_matrix, p_queens, e_queens]
+def ai_algorithm_to_run(count, state):
+
+   # if count < 20:
+    print("MCTS")
+    monte_carlo = mcts(state, game_rules)
+    move_found = monte_carlo.run_iter(10000)
+    return move_found
+    #else:
+     #   print("AlphaBeta")
+      #  move_found = iterative_deepening_search(state[0], 2, board_size, state[1], state[2], count, ai_time / 10)
 
 
 initialize_board()
@@ -237,14 +260,10 @@ while True:
         else:
             max_depth = 2
         if players[i][1].upper() == "WHITE":
-            move = iterative_deepening_search(board_matrix, 2, board_size,
-                                              white_queens_setup,
-                                              black_queen_setup, turn_count, ai_time / 10)
+            game_state = [board_matrix, white_queens_setup, black_queen_setup, "white"]
         else:
-            move = iterative_deepening_search(board_matrix, 2, board_size,
-                                              black_queen_setup,
-                                              white_queens_setup, turn_count, ai_time / 10)
-        print(move)
+            game_state = [board_matrix, black_queen_setup, white_queens_setup, "black"]
+        move = ai_algorithm_to_run(turn_count, game_state)
         current_queen_position, new_queen_position, arrow_position = move
         ai_move(current_queen_position, new_queen_position, arrow_position, players[i][1])
         move_string = SI.translate_cordinate(current_queen_position, new_queen_position, arrow_position)
@@ -265,4 +284,4 @@ while True:
 
     i = (i + 1) % 2
 
-# Change
+
