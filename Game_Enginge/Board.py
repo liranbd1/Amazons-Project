@@ -4,8 +4,7 @@ from Game_Enginge.Queen import *
 from Game_Enginge import Rules, StringInput as SI
 from AI.Enchantments.ZorbistHashing import init_zobrist_table, hash_table, compute_hash, clear_hash
 from AI.Search_tree.IterativeDeepening import iterative_deepening_search, depth_found
-from AI.Search_tree.GameRules import GameRules as gr
-from AI.Search_tree.MCTS import MCTS_with_UCT as mcts
+from AI.Search_tree.MCTS import MCTS_Tree as mcts
 
 # Variables to create the board initial state
 board_size = 0
@@ -204,12 +203,6 @@ def who_starts():
         else:
             print("Please enter a valid input")
 
-
-def init_game_rules():
-    global game_rules
-    game_rules = gr(board_size)
-
-
 def are_we_in_the_endgame_now():
     # we need to get to matrix of relative territory for each color
     pass
@@ -221,7 +214,6 @@ def initialize_board():
     setup_board()
     set_game_mode()
     set_timer()
-    init_game_rules()
     print_board()
     init_zobrist_table(board_size)
 
@@ -231,8 +223,8 @@ def ai_algorithm_to_run(count, state):
 
    # if count < 20:
     print("MCTS")
-    monte_carlo = mcts(state, game_rules)
-    move_found = monte_carlo.run_iter(10000)
+    monte_carlo = mcts(state)
+    move_found = monte_carlo.start_mcts_search(10000)
     return move_found
     #else:
      #   print("AlphaBeta")
@@ -260,9 +252,9 @@ while True:
         else:
             max_depth = 2
         if players[i][1].upper() == "WHITE":
-            game_state = [board_matrix, white_queens_setup, black_queen_setup, "white"]
+            game_state = [board_matrix, white_queens_setup, black_queen_setup, "white", board_size]
         else:
-            game_state = [board_matrix, black_queen_setup, white_queens_setup, "black"]
+            game_state = [board_matrix, black_queen_setup, white_queens_setup, "black", board_size]
         move = ai_algorithm_to_run(turn_count, game_state)
         current_queen_position, new_queen_position, arrow_position = move
         ai_move(current_queen_position, new_queen_position, arrow_position, players[i][1])
