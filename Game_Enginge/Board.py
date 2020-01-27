@@ -4,7 +4,10 @@ from Game_Enginge.Queen import *
 from Game_Enginge import Rules, StringInput as SI
 from AI.Enchantments.ZorbistHashing import init_zobrist_table, hash_table, compute_hash, clear_hash
 from AI.Search_tree.IterativeDeepening import iterative_deepening_search, depth_found
+from AI.Search_tree.Test import mcts_start
 from AI.Search_tree.MCTS import MCTS_Tree as mcts
+from copy import deepcopy
+import numpy as np
 
 # Variables to create the board initial state
 board_size = 0
@@ -221,11 +224,17 @@ def initialize_board():
 # state = [board_matrix, p_queens, e_queens]
 def ai_algorithm_to_run(count, state):
 
+    move_found = mcts_start(board_matrix, board_size, 10000, state[1], state[2])
+    return SI.translating_move(move_found)
    # if count < 20:
-    print("MCTS")
-    monte_carlo = mcts(state)
-    move_found = monte_carlo.start_mcts_search(10000)
-    return move_found
+    #print("MCTS")
+    #np_board_state = np.array([np.array(line) for line in state[0]])
+    #np_p_queens = np.array(state[1], order='F')
+   # np_e_queens = np.array(state[2], order='F')
+    #np_state = np.array([np_board_state, np_p_queens, np_e_queens, state[3], state[4]])
+    #monte_carlo = mcts(np_state)
+    #move_found = monte_carlo.start_mcts_search(1000)
+    #return SI.translating_move(move_found)
     #else:
      #   print("AlphaBeta")
       #  move_found = iterative_deepening_search(state[0], 2, board_size, state[1], state[2], count, ai_time / 10)
@@ -252,11 +261,13 @@ while True:
         else:
             max_depth = 2
         if players[i][1].upper() == "WHITE":
-            game_state = [board_matrix, white_queens_setup, black_queen_setup, "white", board_size]
+            game_state = [board_matrix, white_queens_setup, black_queen_setup, "black", board_size]
         else:
-            game_state = [board_matrix, black_queen_setup, white_queens_setup, "black", board_size]
+            game_state = [board_matrix, black_queen_setup, white_queens_setup, "white", board_size]
+
         move = ai_algorithm_to_run(turn_count, game_state)
         current_queen_position, new_queen_position, arrow_position = move
+        print(move)
         ai_move(current_queen_position, new_queen_position, arrow_position, players[i][1])
         move_string = SI.translate_cordinate(current_queen_position, new_queen_position, arrow_position)
 
@@ -269,7 +280,7 @@ while True:
 
         if ai_time <= 0:
             print("AI time has ended, {0} win!!!".format(players[i][1]))
-            break
+
     if is_game_ended(player_turn[i]):
         print("{0} has won!!!!".format(player_turn[(i + 1) % 2]))
         break

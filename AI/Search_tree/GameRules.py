@@ -1,7 +1,7 @@
 from AI.Enchantments.MoveGenerator import move_generator
 from Game_Enginge.Constants import EMPTY_SPACE, ARROW_SPACE, WHITE_QUEEN, BLACK_QUEEN
 import random
-import numpy
+
 
 class GameRules:
     def __init__(self, board_size):

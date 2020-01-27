@@ -3,9 +3,12 @@ from random import randint
 from AI.Enchantments.MoveGenerator import move_generator
 from Game_Enginge.StringInput import translate_cordinate, translating_move
 from Game_Enginge.Constants import EMPTY_SPACE, WHITE_QUEEN, BLACK_QUEEN, ARROW_SPACE
-import random
-
+from copy import deepcopy
+from Game_Enginge.Rules import is_move_legal
+from collections import defaultdict
 # Game tree node
+
+
 class MCTS_Node:
     def __init__(self, state, parent=None, statistics={}):
         self.state = state
@@ -17,6 +20,9 @@ class MCTS_Node:
         child = MCTS_Node(next_state, parent=self)
         self.children[action] = child
         return child
+
+    def set_state(self, state):
+        self.state = state
 
 
 class MCTS_Tree:
@@ -43,33 +49,46 @@ class MCTS_Tree:
             if not self.is_fully_expanded(node):
                 act_set = np.setdiff1d(self.get_actions(node.state), list(node.children.keys()))
                 action = act_set[randint(0, len(act_set) - 1)]
-                newstate = self.perform_action(action, node.state)
-                childnode = node.expand(action, newstate)  # <- expansion
-                childnode.statistics = {" visits ": 0, " reward ": np.zeros(2)}
+                newstate = self.perform_action(action, self.copy_state(node.state))
+                child_node = node.expand(action, newstate)  # <- expansion
+                #self.undo_action(action, node.state)
+                child_node.statistics = {" visits ": 0, " reward ": np.zeros(2)}
 
-                return childnode
+                return child_node
             else:
                 node = node.children[self.best_action(node)]  # <- selection
         return node
 
+    def copy_state(self, state):
+        np_board_state = np.array([np.copy(line) for line in state[0]])
+        np_p_queens = np.array(deepcopy(state[1]))
+        np_e_queens = state[2]
+        np_state = np.array([np_board_state, np_p_queens, np_e_queens, state[3], state[4]])
+        return np_state
+
     def rollout(self, node):
-        roll_state = node.state.copy()
+        roll_state = self.copy_state(node.state)
+        action_list = []
         while not self.is_terminal(roll_state):
             act_set = self.get_actions(roll_state)
-            if len(act_set) == 1 :
-                print("HI")
             action = act_set[randint(0, len(act_set) - 1)]
+            action_list.append(action)
             roll_state = self.perform_action(action, roll_state)
-        return self.reward(roll_state)
+        score = self.reward(roll_state)
+        action_list.reverse()
+        for act in action_list:
+           self.undo_action(act, roll_state)
+        return score
 
     def backup(self, node, reward):
-        while not node is None:
+        while node is not None:
             node.statistics[" visits "] += 1
             node.statistics[" reward "] += reward
             node = node.parent
 
     def start_mcts_search(self, iterations):
         # Vanilla MCTS loop
+
         for i in range(iterations):
             selected_node = self.tree_policy(self.root)  # selection + expansion
             reward = self.rollout(selected_node)  # rollout
@@ -91,52 +110,103 @@ class MCTS_Tree:
             return 1
 
     def is_terminal(self, state):
+        blocked = 0
         board = state[0]
         queens = state[1]
         size = int(state[4])
         for queen in queens:
             (row, col) = queen.get_position()
+
             if row + 1 < size:
                 if board[row + 1][col] != EMPTY_SPACE:
-                    return False
+                    blocked += 1
             else:
-                return False
+                blocked += 1
+
             if col + 1 < size:
                 if board[row][col + 1] != EMPTY_SPACE:
-                    return False
+                    blocked += 1
             else:
-                return False
+                blocked += 1
+
             if row - 1 > 0:
                 if board[row - 1][col] != EMPTY_SPACE:
-                    return False
+                    blocked += 1
             else:
-                return False
+                blocked += 1
             if col - 1 > 0:
                 if board[row][col - 1] != EMPTY_SPACE:
-                    return False
+                    blocked += 1
             else:
-                return False
+                blocked += 1
+
             if row + 1 < size and col + 1 < size:
                 if board[row + 1][col + 1] != EMPTY_SPACE:
-                    return False
+                    blocked += 1
             else:
-                return False
+                blocked += 1
+
             if row + 1 < size and col - 1 > 0:
                 if board[row + 1][col - 1] != EMPTY_SPACE:
-                    return False
+                    blocked += 1
             else:
-                return False
+                blocked += 1
+
             if row - 1 > 0 and col - 1 > 0:
                 if board[row - 1][col - 1] != EMPTY_SPACE:
-                    return False
+                    blocked += 1
             else:
-                return False
+                blocked += 1
+
             if row - 1 > 0 and col + 1 < size:
                 if board[row - 1][col + 1] != EMPTY_SPACE:
-                    return False
+                    blocked += 1
             else:
-                return False
-        return True
+                blocked += 1
+
+        if blocked == (len(queens)*8):   # If every queen is blocked from 8 positions
+            return True
+        else:
+            return False
+
+    def reward(self, state):
+        return randint(0, 1)
+        possible_moves_count = 0
+        possible_squares = []
+        queens = state[2]   # Need to define which player turn
+        size = int(state[4])
+        # Making possible squares
+        for row in range(size):
+            for col in range(size):
+                possible_squares.append([row, col])
+        player_squares = deepcopy(possible_squares)
+        # Iterate over all winning player queens and find their possible 5 turn moves
+        for queen in queens:
+            turn = defaultdict(list)
+            x, y = queen.get_position()
+            player_squares.remove([x, y])
+
+            for square in player_squares:
+                if is_move_legal([x, y], square, size, state[0]):
+                    possible_moves_count += 1
+                    turn[0].append(square)
+                    player_squares.remove(square)
+
+            for i in range(0, 3):
+                if len(turn[i]) == 0:   # If there is no next move
+                    player_squares = deepcopy(possible_squares)
+                    break
+                for base_square in turn[i]:
+                    for target_square in player_squares:
+                        if is_move_legal(base_square, target_square, size, state[0]):
+                            possible_moves_count += 1
+                            turn[i+1].append(target_square)
+                            player_squares.remove(target_square)
+
+            player_squares = deepcopy(possible_squares)
+        print(possible_moves_count)
+        return possible_moves_count
+
 
     def perform_action(self, action, state):
         old_queen, new_queen, arrow = translating_move(action)
@@ -155,9 +225,22 @@ class MCTS_Tree:
                 board_state[new_queen[0]][new_queen[1]] = color
                 board_state[arrow[0]][arrow[1]] = ARROW_SPACE
                 break
-        newstate = [board_state, queens, state[2], player, state[4]]
+        newstate = [board_state, state[2], queens, player, state[4]]
         return newstate
 
-    def reward(self, state):
-        return random.randint(0, 1)
-
+    def undo_action(self, action, state):
+        old_position, clear_queen, arrow = translating_move(action)
+        queens = state[1]
+        if queens[0].get_color().upper() == "WHITE":
+            color = WHITE_QUEEN
+        else:
+            color = BLACK_QUEEN
+        board_state = state[0]
+        for queen in queens:
+            if clear_queen == queen.get_position():
+                queen.set_new_position(old_position)
+                board_state[clear_queen[0]][clear_queen[1]] = EMPTY_SPACE
+                board_state[old_position[0]][old_position[1]] = color
+                if old_position != arrow:
+                    board_state[arrow[0]][arrow[1]] = EMPTY_SPACE
+                break
