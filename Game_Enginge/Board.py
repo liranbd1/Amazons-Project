@@ -224,8 +224,8 @@ def initialize_board():
 # state = [board_matrix, p_queens, e_queens]
 def ai_algorithm_to_run(count, state):
 
-    move_found = mcts_start(board_matrix, board_size, 10000, state[1], state[2])
-    return SI.translating_move(move_found)
+    move_found = mcts_start(board_matrix, board_size, 10 , state[1], state[2])
+    return move_found
    # if count < 20:
     #print("MCTS")
     #np_board_state = np.array([np.array(line) for line in state[0]])

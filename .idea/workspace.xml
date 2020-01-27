@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ebc68c8-3d45-4584-9aaa-0ea351d7a1de" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/AI/Search_tree/Test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AI/Search_tree/GameRules.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/Search_tree/GameRules.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AI/Search_tree/MCTS.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/Search_tree/MCTS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Search_tree/Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/Search_tree/Test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game_Enginge/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_Enginge/Board.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,14 +33,23 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Game_Enginge/Board.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="191">
-                  <caret line="226" selection-start-line="226" selection-end-line="226" />
+                <state relative-caret-position="344">
+                  <caret line="227" column="21" selection-start-line="227" selection-start-column="21" selection-end-line="227" selection-end-column="21" />
                   <folding>
                     <element signature="e#0#36#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38-32/Lib/codecs.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="191">
+                  <caret line="309" selection-start-line="309" selection-end-line="309" />
                 </state>
               </provider>
             </entry>
@@ -84,11 +90,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/AI/Search_tree/Test.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="221">
-                  <caret line="25" column="30" selection-start-line="25" selection-start-column="30" selection-end-line="25" selection-end-column="30" />
+                <state relative-caret-position="272">
+                  <caret line="27" selection-start-line="27" selection-end-line="27" />
                   <folding>
                     <element signature="e#0#26#0" expanded="true" />
                   </folding>
@@ -103,7 +109,7 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/AI/Search_tree/MCTS.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="77">
+                <state relative-caret-position="1964">
                   <caret line="177" column="22" selection-start-line="177" selection-start-column="22" selection-end-line="177" selection-end-column="22" />
                   <folding>
                     <element signature="e#0#18#0" expanded="true" />
@@ -188,8 +194,8 @@
         <option value="$PROJECT_DIR$/AI/Search_tree/AlphaBetaPruning.py" />
         <option value="$PROJECT_DIR$/AI/Search_tree/GameRules.py" />
         <option value="$PROJECT_DIR$/AI/Search_tree/MCTS.py" />
-        <option value="$PROJECT_DIR$/Game_Enginge/Board.py" />
         <option value="$PROJECT_DIR$/AI/Search_tree/Test.py" />
+        <option value="$PROJECT_DIR$/Game_Enginge/Board.py" />
       </list>
     </option>
   </component>
@@ -498,9 +504,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Game_Enginge/Board.py</url>
-          <line>226</line>
-          <option name="timeStamp" value="18" />
+          <url>file://$PROJECT_DIR$/AI/Search_tree/Test.py</url>
+          <line>26</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -738,13 +744,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38-32/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="309" selection-start-line="309" selection-end-line="309" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/AI/Search_tree/MCTS.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-4">
@@ -755,22 +754,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Game_Enginge/Board.py">
+    <entry file="file://$PROJECT_DIR$/AI/Search_tree/Test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="226" selection-start-line="226" selection-end-line="226" />
+        <state relative-caret-position="272">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
           <folding>
-            <element signature="e#0#36#0" expanded="true" />
+            <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AI/Search_tree/Test.py">
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38-32/Lib/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="25" column="30" selection-start-line="25" selection-start-column="30" selection-end-line="25" selection-end-column="30" />
+        <state relative-caret-position="191">
+          <caret line="309" selection-start-line="309" selection-end-line="309" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Game_Enginge/Board.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="227" column="21" selection-start-line="227" selection-start-column="21" selection-end-line="227" selection-end-column="21" />
           <folding>
-            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#0#36#0" expanded="true" />
           </folding>
         </state>
       </provider>

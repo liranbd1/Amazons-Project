@@ -36,6 +36,8 @@ def backpropagation(points):
         starting_state[1] += 1
         undo_action(starting_state[2], starting_state[6])
         starting_state = mcts_table[compute_hash(board_state)]
+    mcts_table[compute_hash(board_state)][0] += points
+    mcts_table[compute_hash(board_state)][1] += 1
 
 
 def simulation(state):
@@ -103,10 +105,11 @@ def best_action():
     for child in childrens:
         wi = mcts_table[child][0]
         ni = mcts_table[child][1]
-        ucb = wi/ni + 1.8*np.sqrt(np.log(Ni)/ni)
-        if ucb > max_value:
-            max_value = ucb
-            max_child = child
+        if ni != 0 and Ni != 0:
+            ucb = wi/ni + 1.8*np.sqrt(np.log(Ni)/ni)
+            if ucb > max_value:
+                max_value = ucb
+                max_child = child
     return max_child
 
 
