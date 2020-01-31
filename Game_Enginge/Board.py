@@ -7,7 +7,8 @@ from AI.Search_tree.IterativeDeepening import iterative_deepening_search, depth_
 from AI.Search_tree.Test import mcts_start
 from AI.Search_tree.MCTS import MCTS_Tree as mcts
 from copy import deepcopy
-import numpy as np
+from AI.Enchantments.DataToSave import pruning_count, depth_searched_AB, hash_access_count, simulations \
+    , depth_searched_MCTS
 
 # Variables to create the board initial state
 board_size = 0
@@ -206,6 +207,7 @@ def who_starts():
         else:
             print("Please enter a valid input")
 
+
 def are_we_in_the_endgame_now():
     # we need to get to matrix of relative territory for each color
     pass
@@ -223,21 +225,16 @@ def initialize_board():
 
 # state = [board_matrix, p_queens, e_queens]
 def ai_algorithm_to_run(count, state):
+    size = int(board_size)
+    if int(count) / (size*size)> 1 / 3:
+        move_found = mcts_start(board_matrix, board_size, ai_time / 10, state[1], state[2])
+        SI.print_extra_data_MCTS(depth_searched_MCTS, simulations)
 
-    move_found = mcts_start(board_matrix, board_size, 10 , state[1], state[2])
+    else:
+        move_found = iterative_deepening_search(state[0], 2, board_size, state[1], state[2], count, ai_time / 10)
+        SI.print_extra_data_AB(depth_searched_AB, pruning_count, hash_access_count)
+
     return move_found
-   # if count < 20:
-    #print("MCTS")
-    #np_board_state = np.array([np.array(line) for line in state[0]])
-    #np_p_queens = np.array(state[1], order='F')
-   # np_e_queens = np.array(state[2], order='F')
-    #np_state = np.array([np_board_state, np_p_queens, np_e_queens, state[3], state[4]])
-    #monte_carlo = mcts(np_state)
-    #move_found = monte_carlo.start_mcts_search(1000)
-    #return SI.translating_move(move_found)
-    #else:
-     #   print("AlphaBeta")
-      #  move_found = iterative_deepening_search(state[0], 2, board_size, state[1], state[2], count, ai_time / 10)
 
 
 initialize_board()
@@ -275,8 +272,6 @@ while True:
         ai_time -= elapsedTime
         print_board()
         print(SI.move_output(move_string, depth_found, elapsedTime))
-        # Here we need to print another technical data (What we got from our function)
-        ## UNCOMMENT THIS--- SI.PrintExtraData(depth, PV, PVEvaluation, pruningData, hashAccessNumbers)
 
         if ai_time <= 0:
             print("AI time has ended, {0} win!!!".format(players[i][1]))
@@ -286,5 +281,3 @@ while True:
         break
 
     i = (i + 1) % 2
-
-

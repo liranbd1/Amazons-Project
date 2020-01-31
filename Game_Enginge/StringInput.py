@@ -1,3 +1,4 @@
+"""Translating strings back to actual moves and backwards"""
 letters_dictionary = {}
 
 
@@ -45,9 +46,12 @@ def move_output(move, evaluation, time):
     return str(move) + "/" + str(evaluation) + "/" + str(time)
 
 
-def print_extra_data(depth, PV, PVEvaluation, pruningData, hashAccessNumbers):
+def print_extra_data_AB(depth, pruning_data, hash_access_number):
     print("Depth searched: {0}".format(depth))
-    print("Main PV: {0}".format(PV))
-    print("PV evaluation: {0}".format(PVEvaluation))
-    print("Cutoff data(?): {0}".format(pruningData))
-    print("Hash accessed: {0} times".format(hashAccessNumbers))
+    print("Number of cutoffs: {0}".format(pruning_data))
+    print("Hash accessed: {0} times".format(hash_access_number))
+
+
+def print_extra_data_MCTS(depth, simulations):
+    print("Amount of simulation: {0}".format(simulations))
+    print("Depth reached: {0}".format(depth))

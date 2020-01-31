@@ -1,5 +1,9 @@
+"""Mobility evaluation heuristic - checking per player how fast can it get to any space on the board
+fast: the number of turns it takes the player to get to the space
+This heuristic alone will cause the queen to prefer going to center of the board, alone it is not strong causing an
+easy capture by the enemy"""
+
 from Game_Enginge.Constants import WHITE_QUEEN, BLACK_QUEEN, EMPTY_SPACE, ARROW_SPACE
-from Game_Enginge.Rules import is_move_legal
 
 
 def MobilityEvaluation(board_state, board_size, queens):

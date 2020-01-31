@@ -1,3 +1,4 @@
+"""Calling Alpha Beta in different depths during the limit time we are given"""
 from AI.Search_tree.AlphaBetaPruning import start_alpha_beta
 from Game_Enginge.Constants import MIN_VALUE
 from time import time

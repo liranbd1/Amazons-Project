@@ -1,3 +1,4 @@
+"""Movement rules of the game, checking if the move the user wants to make is legal"""
 from Game_Enginge.Constants import EMPTY_SPACE
 
 

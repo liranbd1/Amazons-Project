@@ -1,14 +1,16 @@
+""" a class of Queen object holding all the relevant data of a queen"""
 class Queen:
     def __init__(self, position, color):
         self.position = position
         self.color = color
-
+    """Getters"""
     def get_position(self):
         return [self.position[0], self.position[1]]
 
     def get_color(self):
         return self.color
 
+    """Side functions to see if the queen is free"""
     def corner_checkup(self, point1, point2, point3):
         if (point1 == " x ") and (point2 == " x ") and (point3 == " x "):
             return False
@@ -40,7 +42,7 @@ class Queen:
 
         else:
             return True
-
+    """returning a boolean if the queen is free or not """
     def is_queen_free(self, board, size):
         px = int(self.position[0])
         py = int(self.position[1])
@@ -150,6 +152,6 @@ class Queen:
                     return True
 
             return False
-
+    """setter"""
     def set_new_position(self, position):
         self.position = position

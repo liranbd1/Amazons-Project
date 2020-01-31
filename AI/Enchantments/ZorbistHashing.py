@@ -1,3 +1,6 @@
+"""A zobrist table to hold the moves we checked in the alpha-beta pruning enabling us to do a smart sorting of the
+moves for more pruning"""
+
 from random import randint
 from Game_Enginge.Constants import WHITE_QUEEN, BLACK_QUEEN, ARROW_SPACE, EMPTY_SPACE
 zobrist_table = []

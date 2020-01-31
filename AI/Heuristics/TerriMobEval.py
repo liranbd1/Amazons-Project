@@ -1,12 +1,15 @@
-
+""" Territory Mobility Evaluation -
+Territory: Assuming we know how fast each player can get to any space in the board we can check which player can
+get to space A faster, the one who get faster has the control of the territory.
+Using this with the mobility evaluation we can make the queens move to areas with more possible moves (the center
+of the board) and give them the block enemy units in smaller territories.
+Our heuristics has the cost of 4 to 1 favoring the territory heuristic"""
 # Creating the evaluation function
 # The evaluation function will find which player can get first to each tile
 # In addition we will keep the moves that we can get by 1 step
 # -- we will create 2 new matrices that in each position will be the minimum number of step
 # -- that require to get there for each player
 
-from Game_Enginge.Constants import EMPTY_SPACE, BLACK_QUEEN, WHITE_QUEEN
-from collections import deque
 from Game_Enginge.Rules import is_move_legal
 from copy import deepcopy
 

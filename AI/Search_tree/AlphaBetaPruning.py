@@ -1,14 +1,14 @@
 from AI.Heuristics.TerriMobEval import TerritoryMobilityEvaluation
 from AI.Heuristics.MobilityEvaluation import MobilityEvaluation
-from Game_Enginge.Rules import is_move_legal
 from Game_Enginge.Constants import EMPTY_SPACE, WHITE_QUEEN, BLACK_QUEEN, ARROW_SPACE
-from copy import deepcopy
 from AI.Enchantments.ZorbistHashing import compute_hash, hash_table
 from AI.Enchantments.Killer_Moves import killer_moves
 import collections
 import random
-from time import time
 from AI.Enchantments.MoveGenerator import move_generator
+from AI.Enchantments.DataToSave import data_to_save_AB
+
+hash_access_count = 0
 MIN = -1000
 MAX = 1000
 board_state = []
@@ -21,10 +21,7 @@ pruning_count = 0
 max_depth_found = 0
 
 
-# What our Hash table need to hold
-# value, Move, How deep we looked, father/son, current turn(How much deep we looked from the start of the game), player
-
-
+""" Simulating the move that was made to the board"""
 def update_move_to_board(move, queens, color):
     global board_state
     global current_depth
@@ -32,7 +29,7 @@ def update_move_to_board(move, queens, color):
     old_queen, new_queen, arrow = move
     # need to update the queen list
     for queen in queens:
-        if old_queen == queen.get_position():  # TODO inserting the changes inside the loop
+        if old_queen == queen.get_position():
             queen.set_new_position(new_queen)
             board_state[old_queen[0]][old_queen[1]] = EMPTY_SPACE
             board_state[new_queen[0]][new_queen[1]] = color
@@ -40,14 +37,14 @@ def update_move_to_board(move, queens, color):
             current_depth += 1
             break
 
-
+"""Undoing the move that were simulated to the board"""
 def undo_move_to_board(move, player):
     global current_depth
 
     pos_to_back, pos_to_del, arrow = move
 
     for queen in player[0]:
-        if pos_to_del == queen.get_position():  # TODO inserting the changes inside the loop
+        if pos_to_del == queen.get_position():
             queen.set_new_position(pos_to_back)
             board_state[pos_to_del[0]][pos_to_del[1]] = EMPTY_SPACE
             board_state[pos_to_back[0]][pos_to_back[1]] = player[3]
@@ -57,13 +54,18 @@ def undo_move_to_board(move, player):
             break
 
 
-# This way our hash table will hold the value of the state_board, his son which is the best move from it and the move
-# from his father that made this state
-# No need to add the depth, we can find the sate in O(1) each time and then access his son to add his move to the start
-# of the list, this way we will always check the best moves in this direction
-# Next step we need to do is find how we can clean the move_table from data of illegal moves, or maybe not? is this
-# table holds a huge amount of data? not really, the amount of cells in the table is huge but the values hold small data
+"""Updating our zobrist hash table
+key: the value we are given from the hash function for the specific board state
+value: the value we bubbled up or found with the evaluation function
+move: what was the move that we want to do from this state
+depth: how deep is the state in the full tree search
+son_key: the key of the son node
+player_color: who made the move
+max_depth: how deep we looked"""
 def add_to_zobrist_hash_table(key, value, move, depth, son_key, player_color, max_depth):
+    global hash_access_count
+
+    hash_access_count += 1
     if key not in hash_table:
         hash_table[key] = [value, move, depth, depth + turn_count, son_key, player_color, max_depth - depth]
     else:
@@ -76,7 +78,8 @@ def add_to_zobrist_hash_table(key, value, move, depth, son_key, player_color, ma
                 hash_table.update({key: new_data})
 
 
-def evaluate():  # TODO new territory mobility function
+"""evaluating our leaf node"""
+def evaluate():
 
     if players[current_depth % 2][1] is True:
         player_queens = players[current_depth % 2][0]
@@ -91,19 +94,23 @@ def evaluate():  # TODO new territory mobility function
     return score
 
 
-def soft_evaluate():  # TODO first we will check if we calc the move by the territory-mobility evaluation
+"""sof evaluation for the sorting of the moves"""
+def soft_evaluate():
+    global hash_access_count
+
     key = compute_hash(board_state)
     if key in hash_table:
+        hash_access_count += 1
         data = hash_table[key]
         return data[0]
     else:
         return random.randint(-10, 10)
 
 
+"""sorting the moves for better pruning"""
 def sort_moves(moves_to_sort, player):
-    start = time()
-    my_value = 0
-    enemy_value = 0
+    global hash_access_count
+
     moves_scores = {}
     iteration = 1
     for move in moves_to_sort:
@@ -120,23 +127,24 @@ def sort_moves(moves_to_sort, player):
         else:
             data = hash_table[key]
             value = data[0]
-        moves_scores[value] = move  # TODO we will overwrite data here in some cases
-        iteration += 1  # TODO ok?
+            hash_access_count += 1
+        moves_scores[value] = move
+        iteration += 1
         undo_move_to_board(move, player)
 
-    if players[current_depth % 2] is True:  # TODO sorting the move by max or min player
+    if players[current_depth % 2] is True:
         sorted_max_moves = collections.OrderedDict(sorted(moves_scores.items(), reverse=True))
     else:
         sorted_max_moves = collections.OrderedDict(sorted(moves_scores.items()))
     sorted_list = list(sorted_max_moves.values())
-    if current_depth - 1 in killer_moves:  # TODO adding killer moves
+    if current_depth - 1 in killer_moves:
         for killer_move in killer_moves[current_depth - 1]:
             if killer_move in sorted_list:
                 sorted_list = killer_move + sorted_list.pop(sorted_list.index(killer_move))
-    end = time()
     return sorted_list
 
 
+"""The alpha beta algorithm"""
 def alpha_beta(depth, alpha, beta):
     global current_depth
     global son_to_save
@@ -177,6 +185,7 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             alpha = max(alpha, max_evaluation)
             if beta <= alpha:
+                pruning_count += 1
                 if current_depth - 1 in killer_moves:
                     if move not in killer_moves[current_depth - 1]:
                         if len(killer_moves[current_depth - 1]) == 2:
@@ -206,6 +215,7 @@ def alpha_beta(depth, alpha, beta):
                 son_to_save = key
             beta = min(beta, min_evaluation)
             if beta <= alpha:
+                pruning_count += 1
                 if current_depth - 1 in killer_moves:
                     if move not in killer_moves[current_depth - 1]:
                         if len(killer_moves[current_depth - 1]) == 2:
@@ -219,6 +229,13 @@ def alpha_beta(depth, alpha, beta):
         return min_evaluation
 
 
+def clear_hash_table():
+    for key in hash_table:
+        if turn_count > hash_table[key][3]:
+            del hash_table[key]
+
+
+"""The call for this script page - getting all the needed data and starting the alpha beta after all is ready"""
 def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q, turn_number, alpha, beta):
     global board_state
     global board_size
@@ -227,7 +244,9 @@ def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q,
     global turn_count
     global pruning_count
     global max_depth_found
+    global hash_access_count
 
+    hash_access_count = 0
     max_depth_found = 0
     pruning_count = 0
     move = 0
@@ -250,18 +269,16 @@ def start_alpha_beta(starting_board_matrix, depth, size, player_queens, enemy_q,
     # Reset our current depth to 0
     current_depth = 0
     # Freeing memory from old moves in hash table
+    clear_hash_table()
     val = alpha_beta(depth, alpha, beta)
-    # print("Number of pruning_count: {0}".format(pruning_count))
+    data_to_save_AB(pruning_count, depth, hash_access_count)
     # Searching for the value in our hash table.
     for key in hash_table:
         data = hash_table[key]
-        # {value, move, depth, depth + turn_count, father_son, player_color}
         if data[0] == val and data[3] == turn_count + 1 and data[5] == max_player[2]:
             move = data[1]
-            # print(key)
             break
     if move == 0 or len(move) != 3:
-        return 1, False # TODO adding 1 to value to unpack if there is no move in the current window
-        # raise Exception("Didn't find a viable move")
+        return 1, False
 
     return val, move
